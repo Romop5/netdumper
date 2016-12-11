@@ -1,3 +1,4 @@
+
 CFLAGS=-g -Wall -Wextra
 
 main: main.o netstat.o

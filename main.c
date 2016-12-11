@@ -27,8 +27,6 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	// set data to null
-	memset(tcpData,0, sizeof(ndata)*65536);
-	//memset(udpData,0, (256)*65536);
 
 	// initialize netstat scanner
 	n_init();	

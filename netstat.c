@@ -22,6 +22,8 @@ int stroccur(char* str, char c)
 int column2port(char* column)
 {
 	char* port = strrchr(column,':')+1;
+	if(port == 1)
+		return 0;
 	return atoi(port);
 }
 void skipSpaces(FILE* file)
@@ -35,6 +37,24 @@ void skipSpaces(FILE* file)
 			return;
 		}
 	}
+}
+// Read a single column until end of line
+int readColumnEOL(FILE* file, char* column)
+{
+	int c,lastc = 'a';
+	do {
+		c = fgetc(file);
+		if(c == '\n')
+			break;
+		if(!(isspace(c) && isspace(lastc)))
+		{
+			*(column++) = c;
+			lastc = c;
+		}
+
+	} while(c != EOF);
+	*column = '\0';
+	return 0;
 }
 // Read a single column from line 
 int readColumn(FILE* file, char* column)
@@ -80,6 +100,8 @@ int n_getData(ndata* data)
 
 	// proto
 	readColumn(dataSource,col);
+	if(strlen(col) == 0)
+		return 0;
 	isUdp = strcmp(col,"tcp");
 	// unk
 	readColumn(dataSource,col);
@@ -87,6 +109,8 @@ int n_getData(ndata* data)
 	readColumn(dataSource,col);
 	// src
 	readColumn(dataSource,col);
+	if(strlen(col) == 0)
+		return 0;
 	// if more than one ':' occurs in local address => IPv6
 	isIP6 = (stroccur(col, ':') > 1);
 
@@ -100,7 +124,7 @@ int n_getData(ndata* data)
 		readColumn(dataSource,col);
 	}
 	// program (root access required)
-	readColumn(dataSource,col);
+	readColumnEOL(dataSource,col);
 
 	// fill provided data	
 	data->proto = isUdp;
@@ -117,7 +141,7 @@ int n_load()
 
 	if(dataSource!= NULL)
 		pclose(dataSource);
-	dataSource = popen("netstat -tuapn 2>/dev/null| tail -n+3","r");
+	dataSource = popen("netstat -tuapn --numeric-ports 2>/dev/null| tail -n+3","r");
 	if(dataSource)
 		return 1;
 	return 0;
