@@ -105,7 +105,10 @@ int n_getData(ndata* data)
 	// fill provided data	
 	data->proto = isUdp;
 	data->port = port;
-	strcpy(data->program, col);
+	if(col[3] != '-')
+		strcpy(data->program, col);
+	else
+		strcpy(data->program, "-");
 	return 1;
 }
 
@@ -114,7 +117,7 @@ int n_load()
 
 	if(dataSource!= NULL)
 		pclose(dataSource);
-	dataSource = popen("netstat -tuapn | tail -n+3","r");
+	dataSource = popen("netstat -tuapn 2>/dev/null| tail -n+3","r");
 	if(dataSource)
 		return 1;
 	return 0;
@@ -123,4 +126,5 @@ int n_load()
 void n_dtor()
 {
 	pclose(dataSource);
+	dataSource = NULL;
 }
