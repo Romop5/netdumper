@@ -1,4 +1,3 @@
-#!/bin/bash
 # Author: Roman Dobias (xdobia11) 
 # Jan 2017
 # Note: used at Ubuntu 14.10

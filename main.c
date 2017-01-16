@@ -15,19 +15,12 @@ void processData(ndata* data)
 	if(strcmp(array[data->port].program, data->program) != 0)
 	{
 		strcpy(array[data->port].program, data->program);
-		printf("'%lu' '%s' '%d' '%s' \n",time(NULL), (data->proto)?"UDP":"TCP",data->port, data->program);
+		//printf("'%lu' '%s' '%d' '%s' \n",time(NULL), (data->proto)?"UDP":"TCP",data->port, data->program);
 	}
 }
 
 int main(int argc, char** argv)
 {
-	if(argc < 2)
-	{
-		fprintf(stderr,"USAGE: FILE_TO_STORE_DUMPS");
-		return 1;
-	}
-	// set data to null
-
 	// initialize netstat scanner
 	n_init();	
 	while(1 == 1)

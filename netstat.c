@@ -2,153 +2,112 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
 
-// module-only global file handle
-FILE* dataSource = NULL;
+FILE* g_data;
 
-
-// get the count of 'c' occurences in str
-int stroccur(char* str, char c)
-{
-	int count = 0;
-	while(*str != '\0')
-	{
-		if(*(str++) == c)
-			count++;
-	}
-	return count;
-}
-// Convert ascii address to port
-int column2port(char* column)
-{
-	char* port = strrchr(column,':')+1;
-	if(port == 1)
-		return 0;
-	return atoi(port);
-}
-void skipSpaces(FILE* file)
-{
-	int c;
-	while((c = fgetc(file)) != EOF)
-	{
-		if(!isspace(c))
-		{
-			ungetc(c,file);
-			return;
-		}
-	}
-}
-// Read a single column until end of line
-int readColumnEOL(FILE* file, char* column)
-{
-	int c,lastc = 'a';
-	do {
-		c = fgetc(file);
-		if(c == '\n')
-			break;
-		if(!(isspace(c) && isspace(lastc)))
-		{
-			*(column++) = c;
-			lastc = c;
-		}
-
-	} while(c != EOF);
-	*column = '\0';
-	return 0;
-}
-// Read a single column from line 
-int readColumn(FILE* file, char* column)
-{
-	int c;
-	do {
-		c = fgetc(file);
-		if(c == '\n')
-			break;
-		if(isspace(c))
-		{
-			skipSpaces(file);
-			break;
-		} else {
-			*(column++) = c;
-		}
-		
-	} while(c != EOF);
-	*column = '\0';
-	return 0;
-}
-
-/*
- * 	PUBLIC FUNCTIONS
- */
-
+// Initialize init module
 void n_init()
 {
-	dataSource = NULL;
 }
 
+// load data
+int n_load()
+{
+	g_data = popen("./binds.sh","r");
+	return (g_data != 0);
+}
+
+int readColumn(char* col)
+{
+	int c;
+	while((c = fgetc(g_data)) != EOF)
+	{
+		if(c ==  ',' || c == '\n')
+			break;
+		*col = c; 
+		col++;	
+	}
+	*col = '\0';
+	return (c == EOF);
+}
+
+// return 1 on success
+int convertIP(char* src, struct in6_data *out)
+{
+	if(inet_pton(AF_INET, src, (struct in_data*) out) == 1)
+	{
+		uint32_t *data = (uint32_t*) out;
+		data[3] = data[0];
+		data[0] = 0;
+		return 1;
+	}
+	return inet_pton(AF_INET6, src, out);
+}
+
+// Fill data with a single connection
+// Returns 0 if no data is available
 int n_getData(ndata* data)
 {
-	int c = getc(dataSource);
-	if(c == EOF)
+	if(feof(g_data) > 0) 
 		return 0;
-	ungetc(c,dataSource);
-	char col[256];
-	int colnum = 0;
-	int port;
-	int isUdp;
-	int isIP6;
 
-	// proto
-	readColumn(dataSource,col);
-	if(strlen(col) == 0)
-		return 0;
-	isUdp = strcmp(col,"tcp");
-	// unk
-	readColumn(dataSource,col);
-	// unk
-	readColumn(dataSource,col);
-	// src
-	readColumn(dataSource,col);
-	if(strlen(col) == 0)
-		return 0;
-	// if more than one ':' occurs in local address => IPv6
-	isIP6 = (stroccur(col, ':') > 1);
-
-	port = column2port(col);
-	
-	// dest
-	readColumn(dataSource,col);
-	// state (skipped in case of UDP)
-	if(!isUdp)
+	int sum = 0;
+	char strips[4][256];
+	for(int i = 0; i < 4; i++)
 	{
-		readColumn(dataSource,col);
-	}
-	// program (root access required)
-	readColumnEOL(dataSource,col);
+		sum += readColumn(strips[i]);
+	}	
+	if(sum != 0)
+		return 0;
+	// get them all
+	// CVS:
+	// PROTO SRC PORT PROGRAM
+	// DEBUG
+	//printf("[%s] %s:%s [%s]\n",strips[0],strips[1],strips[2],strips[3]);
 
-	// fill provided data	
-	data->proto = isUdp;
-	data->port = port;
-	if(col[3] != '-')
-		strcpy(data->program, col);
-	else
-		strcpy(data->program, "-");
+	// detect PROTO
+	data->proto = UDP;
+	if(strcmp("UDP", strips[0]) == 0)
+		data->proto = TCP;
+
+	// detect SRC
+	struct in6_addr src;
+	convertIP(strips[1],&src); 
+
+	char buff[256];
+	inet_ntop(AF_INET6, &src, buff, 255);
+	printf("Buff: %s\n",buff);
+
+	// detect PORT
+	data->port = atoi(strips[2]);
+
+	// PROGRAM
+	strcpy(data->program, strips[3]);	
 	return 1;
 }
 
-int n_load()
-{
-
-	if(dataSource!= NULL)
-		pclose(dataSource);
-	dataSource = popen("netstat -tuapn --numeric-ports 2>/dev/null| tail -n+3","r");
-	if(dataSource)
-		return 1;
-	return 0;
-}
-
+// free data used by module
 void n_dtor()
 {
-	pclose(dataSource);
-	dataSource = NULL;
+	pclose(g_data);
 }
+
+/*
+int main()
+{
+
+	FILE* dataSource = popen("./binds.sh","r");
+	if(dataSource)
+	{
+		int c;
+		while((c = getc(dataSource)) != EOF)
+		{	
+			putchar(c);
+		}
+	}
+	pclose(dataSource);
+}*/
