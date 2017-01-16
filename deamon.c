@@ -2,6 +2,7 @@
 #include "hashtbl.h"
 #include "udp.h"
 
+#include "netstat.h"
 
 // stores triples (ip, port, program)
 hash_tab_t g_binds;
@@ -12,6 +13,7 @@ queue_t g_outData;
 
 int updatePortBinds()
 {
+	/*
 	static int counter = 0;
 	// if 1000 ticks has passed since last update
 	if(counter++ > 100)
@@ -24,6 +26,25 @@ int updatePortBinds()
 		data_t a = {inet_addr("127.0.0.1"),80,P_UDP,"romco"};
 		queue_append(&g_outData, a);
 	}
+*/
+	// ---------------------
+	n_load();
+	ndata data; 
+	while(n_getData(&data) != 0)
+	{
+		data_t* dt = hash_tab_find(g_binds, data->addr, data->port, data->proto);
+		if(dt)
+		{
+			// if nothing has changed, scan for another
+			if(strcmp(dt->program, data->program) == 0)
+				continue;
+		}
+		hash_tab_add(g_binds, data->addr, data->port, data->proto, data->program);
+
+		// append into queue
+		queue_append(&g_outData, 
+	}
+	n_dtor();
 }
 
 void sendDataOut(int fd, peer_t* p)

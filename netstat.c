@@ -50,7 +50,7 @@ int convertIP(char* src, struct in6_data *out)
 
 // Fill data with a single connection
 // Returns 0 if no data is available
-int n_getData(ndata* data)
+int n_getData(data_t* data)
 {
 	if(feof(g_data) > 0) 
 		return 0;
@@ -70,9 +70,9 @@ int n_getData(ndata* data)
 	//printf("[%s] %s:%s [%s]\n",strips[0],strips[1],strips[2],strips[3]);
 
 	// detect PROTO
-	data->proto = UDP;
+	data->protocol = P_UDP;
 	if(strcmp("UDP", strips[0]) == 0)
-		data->proto = TCP;
+		data->protocol = P_TCP;
 
 	// detect SRC
 	struct in6_addr src;

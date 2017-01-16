@@ -4,13 +4,13 @@
 #include "netstat.h"
 
 
-ndata tcpData[65356];
-ndata udpData[65356];
+data_t tcpData[65356];
+data_t udpData[65356];
 
-void processData(ndata* data)
+void processData(data_t* data)
 {
-	ndata* array = tcpData;
-	if(data->proto== UDP)
+	data_t* array = tcpData;
+	if(data->protocol== P_UDP)
 		array = udpData;
 	if(strcmp(array[data->port].program, data->program) != 0)
 	{
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	{
 		n_load();
 
-		ndata data;
+		data_t data;
 		while(n_getData(&data) != 0)
 		{
 			processData(&data);
