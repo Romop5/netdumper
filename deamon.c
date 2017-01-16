@@ -28,23 +28,38 @@ int updatePortBinds()
 	}
 */
 	// ---------------------
+	
+	static int count = 0; 
+	count++;
+	if(count < 100)
+		return 0;
+	count = 0; 
 	n_load();
-	ndata data; 
+	data_t data; 
+	int i = 0;
 	while(n_getData(&data) != 0)
 	{
-		data_t* dt = hash_tab_find(g_binds, data->addr, data->port, data->proto);
+		if(data.program[0] == '-')
+			continue;
+		data_t* dt = hash_tab_find(&g_binds, data.addr, data.port, data.protocol);
 		if(dt)
 		{
 			// if nothing has changed, scan for another
-			if(strcmp(dt->program, data->program) == 0)
+			if(strcmp(dt->program, data.program) == 0)
 				continue;
 		}
-		hash_tab_add(g_binds, data->addr, data->port, data->proto, data->program);
+		hash_tab_add(&g_binds, data.addr, data.port, data.protocol, data.program);
 
-		// append into queue
-		queue_append(&g_outData, 
+		// append into queue and altern timestamp
+		data.timestamp = time();
+		i++;
+		queue_append(&g_outData,data); 
+		
 	}
+	printf("New queue elements count %d\n",i);
+	
 	n_dtor();
+	
 }
 
 void sendDataOut(int fd, peer_t* p)

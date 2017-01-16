@@ -77,11 +77,13 @@ int n_getData(data_t* data)
 	// detect SRC
 	struct in6_addr src;
 	convertIP(strips[1],&src); 
-
+	
+	// DEBUG purpose
+	/*
 	char buff[256];
 	inet_ntop(AF_INET6, &src, buff, 255);
 	printf("Buff: %s\n",buff);
-
+	*/
 	// detect PORT
 	data->port = atoi(strips[2]);
 
