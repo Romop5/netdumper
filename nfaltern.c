@@ -83,23 +83,19 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 		if (lnf_rec_get_raw(recp_in, LNF_REC_RAW_TLV, buf, sizeof(buf), &size) == LNF_OK) {
 			
 			int proto;
-			lnf_ip_t addr;
 			// determine the time
 			lnf_rec_fget(recp_in, LNF_FLD_LAST,&flowEndTime);
-			lnf_rec_fget(recp_in, LNF_FLD_SRCADDR,&addr);
+			lnf_rec_fget(recp_in, LNF_FLD_SRCADDR,&key.addr);
 			lnf_rec_fget(recp_in, LNF_FLD_SRCPORT,&key.port);
 			lnf_rec_fget(recp_in, LNF_FLD_PROT,&proto);
 		
 			// skip IPv6 flow
-			if(!IN6_IS_ADDR_V4COMPAT((struct in6_addr *) &addr))
+			if(!IN6_IS_ADDR_V4COMPAT((struct in6_addr *) &key.addr))
 			{
 				perror("Skipping IPv6\n");
 				continue;
 			}
 
-			// copy last 4 bytes of IPv6 address => get IPv4
-			key.addr4 = addr.data[3];
-	
 			#define UDP_PROTO 0x17
 
 			key.protocol = P_TCP; 
@@ -114,7 +110,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 				{
 					fprintf(stderr,"Updating hashtable.\n");
 					// update hashtable
-					hash_tab_add(processes, dt->addr4, dt->port,dt->protocol, dt->program);
+					hash_tab_add(processes, dt->addr, dt->port,dt->protocol, dt->program);
 					continue;
 				} else {
 				}
@@ -123,7 +119,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			
 			// default process
 			char* def= "NO_DATA";
-			shash_item_t* it = hash_tab_find(processes, key.addr4, key.port,key.protocol);
+			shash_item_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
 			if(it)
 				def = it->data.program;
 			

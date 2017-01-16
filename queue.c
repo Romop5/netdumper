@@ -64,8 +64,9 @@ void queue_print(queue_t* q)
 	int i = 0; 
 	while(it)
 	{
-		struct in_addr a = {it->data.addr4};
-		printf("[%2d] %s:%d\n",++i,inet_ntoa(a), it->data.port);
+		char ip[256];
+		inet_ntop(AF_INET6, &it->data.addr, ip, 256);
+		printf("[%2d] %s:%d\n",++i,ip, it->data.port);
 		it = it->next;
 	}
 }

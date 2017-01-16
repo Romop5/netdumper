@@ -4,9 +4,11 @@
 #define P_UDP 0
 #define P_TCP 1
 
+#include <netinet/ip.h>
+
 typedef struct {
 	// key
-	int addr4;
+	struct in6_addr addr;
 	int port;
 	int protocol;
 	//

@@ -10,7 +10,7 @@
 
 int compare_data(data_t* a, data_t* b)
 {
-	if(a->addr4 == b->addr4 &&
+	if(bcmp(&a->addr,&b->addr,sizeof(struct in6_addr)) &&
 		a->port == b->port)
 		return 1;
 	return 0;	
@@ -68,9 +68,9 @@ shash_item_t*  util_hash_tab_find(hash_tab_t* tab, data_t* key)
 }
 
 // Find member
-data_t*  hash_tab_find(hash_tab_t* tab,int addr4, int port,int proto)
+data_t*  hash_tab_find(hash_tab_t* tab,struct in6_addr addr, int port,int proto)
 {
-	data_t key = {addr4, port,""};
+	data_t key = {addr, port,""};
 	shash_item_t* ptr = util_hash_tab_find(tab,&key);
 	if(ptr)
 	{
@@ -80,20 +80,20 @@ data_t*  hash_tab_find(hash_tab_t* tab,int addr4, int port,int proto)
 }
 
 // Add a new member
-void  hash_tab_add(hash_tab_t* tab,int addr4, int port,int proto, char* program)
+void  hash_tab_add(hash_tab_t* tab,struct in6_addr addr, int port,int proto, char* program)
 {
-	data_t* data = hash_tab_find(tab,addr4,port,proto);	
+	data_t* data = hash_tab_find(tab,addr,port,proto);	
 	if(data)
 	{
 		strcpy(data->program, program);	
 		return;
 	} else {
-		data_t key = {addr4,port,0};	
+		data_t key = {addr,port,0};	
 		unsigned long index = hash(&key, sizeof(data_t)) % tab->pool_size;
 		shash_item_t* item = malloc(sizeof(shash_item_t));
 		if(item)
 		{
-			item->data.addr4 = addr4;
+			item->data.addr = addr;
 			item->data.port= port;
 			item->data.protocol = proto;
 			strcpy(item->data.program,program);
@@ -111,8 +111,8 @@ void hash_tab_print(hash_tab_t* tab)
 		shash_item_t* ptr = tab->pool[i];
 		while(ptr)
 		{	
-			struct in_addr adr = {ptr->data.addr4};
-			char* ip = inet_ntoa(adr);
+			char ip[256];
+			inet_ntop(AF_INET6, &ptr->data.addr, ip, 255);
 			printf("[%d] %s:%d\t%s\n",i,ip, ptr->data.port, ptr->data.program);
 			ptr = ptr->next;
 		}
@@ -122,6 +122,8 @@ void hash_tab_print(hash_tab_t* tab)
 unsigned long hash(data_t* data, int size)
 {
         unsigned long hash = 5381;
-	hash ^= data->port ^ data->addr4; 
+	uint32_t *padd = (uint32_t*) &data->addr;
+	for(int i = 0; i < 4; i++)
+		hash ^= (data->port ^ padd[i]);
         return hash;
 }
