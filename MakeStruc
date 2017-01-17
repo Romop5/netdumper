@@ -3,7 +3,7 @@ CFLAGS=-g -Wall -g -std=c99
 all: test deamon nfaltern
 
 nfaltern: query.o hashtbl.o queue.o udp.o
-	gcc query.o hashtbl.o queue.o udp.o nfaltern.c -l:libnf.a -o nfaltern
+	gcc query.o hashtbl.o queue.o udp.o nfaltern.c -L./. -l:./libnf.a -o nfaltern
 #query: query.o udp.o hashtbl.o queue.o
 #	gcc query.o hashtbl.o queue.o udp.o -o query
 deamon: deamon.o hashtbl.o queue.o udp.o

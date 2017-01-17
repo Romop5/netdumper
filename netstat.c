@@ -36,8 +36,9 @@ int readColumn(char* col)
 }
 
 // return 1 on success
-int convertIP(char* src, struct in6_data *out)
+int convertIP(char* src, struct in6_addr *out)
 {
+	bzero(out, sizeof(struct in6_addr));
 	if(inet_pton(AF_INET, src, (struct in_data*) out) == 1)
 	{
 		uint32_t *data = (uint32_t*) out;

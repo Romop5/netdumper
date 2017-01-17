@@ -44,6 +44,7 @@ int updatePortBinds()
 		data_t* dt = hash_tab_find(&g_binds, data.addr, data.port, data.protocol);
 		if(dt)
 		{
+			printf("Mame ho v tabulke\n");
 			// if nothing has changed, scan for another
 			if(strcmp(dt->program, data.program) == 0)
 				continue;
@@ -58,6 +59,8 @@ int updatePortBinds()
 	}
 	printf("New queue elements count %d\n",i);
 	
+	hash_tab_print(&g_binds);
+	//queue_print(&g_outData);
 	n_dtor();
 	
 }

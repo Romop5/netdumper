@@ -15,7 +15,7 @@ void processData(data_t* data)
 	if(strcmp(array[data->port].program, data->program) != 0)
 	{
 		strcpy(array[data->port].program, data->program);
-		//printf("'%lu' '%s' '%d' '%s' \n",time(NULL), (data->proto)?"UDP":"TCP",data->port, data->program);
+		printf("'%lu' '%s' '%d' '%s' \n",time(NULL), (data->protocol)?"UDP":"TCP",data->port, data->program);
 	}
 }
 
