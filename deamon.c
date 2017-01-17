@@ -49,17 +49,19 @@ int updatePortBinds()
 			if(strcmp(dt->program, data.program) == 0)
 				continue;
 		}
+		printf("Pridavam s programom: %s\n",data.program);
 		hash_tab_add(&g_binds, data.addr, data.port, data.protocol, data.program);
 
 		// append into queue and altern timestamp
-		data.timestamp = time();
+		//data.timestamp = time();
 		i++;
-		queue_append(&g_outData,data); 
+		//queue_append(&g_outData,data); 
 		
 	}
 	printf("New queue elements count %d\n",i);
 	
 	hash_tab_print(&g_binds);
+	printf("Hlada sa chyba\n");
 	//queue_print(&g_outData);
 	n_dtor();
 	

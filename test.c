@@ -10,11 +10,18 @@ int main()
 	pdata[3] = pdata[0];
 	pdata[0] = 0;
 
+	char buff[255] = "Roman";
 	hash_tab_add(&table, addr, 80, P_UDP, "test");	
-	hash_tab_add(&table, addr, 80, P_UDP, "roman");	
-	hash_tab_add(&table, addr, 80, P_UDP, "roman");	
+	hash_tab_add(&table, addr, 80, P_UDP, buff);
+	hash_tab_add(&table, addr, 80, P_UDP, buff);	
+	hash_tab_add(&table, addr, 80, P_TCP, buff);	
+
+	sprintf(buff,"lol");
+
 	hash_tab_print(&table);
 	hash_tab_dispose(&table);
+
+
 
 	printf("Queu\n");
 	queue_t q;
@@ -28,5 +35,5 @@ int main()
 	queue_pop(&q);
 	queue_dispose(&q);
 
-	
+	printf("velkost:%d\n",sizeof(time_t));	
 }

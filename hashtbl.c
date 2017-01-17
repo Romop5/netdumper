@@ -10,8 +10,8 @@
 
 int compare_data(data_t* a, data_t* b)
 {
-	if(bcmp(&a->addr,&b->addr,sizeof(struct in6_addr)) &&
-		a->port == b->port)
+	if(bcmp(&a->addr,&b->addr,sizeof(struct in6_addr)) == 0 &&
+		a->port == b->port && a->protocol == b->protocol)
 		return 1;
 	return 0;	
 }
@@ -70,7 +70,7 @@ shash_item_t*  util_hash_tab_find(hash_tab_t* tab, data_t* key)
 // Find member
 data_t*  hash_tab_find(hash_tab_t* tab,struct in6_addr addr, int port,int proto)
 {
-	data_t key = {addr, port,""};
+	data_t key = {addr, port,proto};
 	shash_item_t* ptr = util_hash_tab_find(tab,&key);
 	if(ptr)
 	{
@@ -82,6 +82,7 @@ data_t*  hash_tab_find(hash_tab_t* tab,struct in6_addr addr, int port,int proto)
 // Add a new member
 void  hash_tab_add(hash_tab_t* tab,struct in6_addr addr, int port,int proto, char* program)
 {
+	//hash_tab_print(tab);
 	data_t* data = hash_tab_find(tab,addr,port,proto);	
 	if(data)
 	{
@@ -113,7 +114,7 @@ void hash_tab_print(hash_tab_t* tab)
 		{	
 			char ip[256];
 			inet_ntop(AF_INET6, &ptr->data.addr, ip, 255);
-			printf("[%d] %s:%d\t%s\n",i,ip, ptr->data.port, ptr->data.program);
+			printf("[%d-%s] %s:%d\t%s\n",i,"P",ip, ptr->data.port, ptr->data.program);
 			ptr = ptr->next;
 		}
 	}

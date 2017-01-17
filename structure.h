@@ -12,7 +12,7 @@ typedef struct {
 	int port;
 	int protocol;
 	//
-	int timestamp;		// Unix timestamp 
+	uint64_t timestamp;		// Unix timestamp 
 	char program[256];
 } data_t;
 
