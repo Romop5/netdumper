@@ -1,6 +1,8 @@
 #include "udp.h"
 #include <strings.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 int fd_server;
 int udp_start_server(const int port)
 {
@@ -32,7 +34,6 @@ int udp_sendTo(int fd, const peer_t* client, char *msg, const int len)
 {
 	printf("Len: %d\n",len);
 	int r;
-	socklen_t length = sizeof(struct sockaddr_in);
 	r = sendto(fd, msg, len, 0, (struct sockaddr *) &client->addr, client->addr_size);	// send the answer
 	printf("r: %d\n",r);
 	if (r == -1 || r != len)
@@ -46,7 +47,7 @@ int udp_sendTo(int fd, const peer_t* client, char *msg, const int len)
 int udp_start_client(const char *addr, const int port,peer_t* out)
 {
 	bzero(out,sizeof(peer_t));
-  int fd, n, i;
+  int fd;
 	inet_aton(addr, &out->addr.sin_addr);
    
   if ((fd = socket(AF_INET , SOCK_DGRAM , 0)) == -1)   //create a client socket
@@ -63,7 +64,6 @@ int udp_start_client(const char *addr, const int port,peer_t* out)
 
 int udp_hasData(int fd, char *data, int len,peer_t* peer)
 {
-	int buff;
 	int res = recvfrom(fd, data, len, 0, (struct sockaddr*) &peer->addr, &peer->addr_size);
 	if (res == -1)
 		return 0;
@@ -75,4 +75,5 @@ int udp_hasData(int fd, char *data, int len,peer_t* peer)
 int udp_close(int fd)
 {
 	close(fd);
+	return 0;
 }

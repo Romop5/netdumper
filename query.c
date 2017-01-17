@@ -2,6 +2,9 @@
 #include "structure.h"
 #include "queue.h"
 
+#include <unistd.h>
+
+
 
 // Return -1 of failure
 // On success, receives structure S_queryData
@@ -47,6 +50,7 @@ int updateFront(queue_t* front)
 			queue_append(front, buff->items[i]);
 		}
 	}
+	return 0;
 }
 /*
 int main()

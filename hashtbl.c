@@ -7,6 +7,7 @@
 #include <string.h>
 #include "hashtbl.h"
 #include <arpa/inet.h>
+#include <strings.h>
 
 int compare_data(data_t* a, data_t* b)
 {
@@ -49,6 +50,7 @@ int hash_tab_dispose(hash_tab_t* tab)
 	free(tab->pool);
 	tab->pool = NULL;
 	tab->pool_size = 0;
+	return 0;
 }
 
 // Find member

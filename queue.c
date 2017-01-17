@@ -41,7 +41,8 @@ void queue_pop(queue_t* q)
 data_t* queue_gettop(queue_t* q)
 {
 	if(q->first)
-	return &q->first->data;
+		return &q->first->data;
+	return NULL;
 }
 
 void queue_dispose(queue_t* q)

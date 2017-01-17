@@ -44,25 +44,23 @@ int updatePortBinds()
 		data_t* dt = hash_tab_find(&g_binds, data.addr, data.port, data.protocol);
 		if(dt)
 		{
-			printf("Mame ho v tabulke\n");
 			// if nothing has changed, scan for another
 			if(strcmp(dt->program, data.program) == 0)
 				continue;
 		}
-		printf("Pridavam s programom: %s\n",data.program);
 		hash_tab_add(&g_binds, data.addr, data.port, data.protocol, data.program);
 
 		// append into queue and altern timestamp
-		//data.timestamp = time();
+		//time_t t = time();
+		//data.timestamp = t;
 		i++;
-		//queue_append(&g_outData,data); 
+		queue_append(&g_outData,data); 
 		
 	}
 	printf("New queue elements count %d\n",i);
 	
 	hash_tab_print(&g_binds);
-	printf("Hlada sa chyba\n");
-	//queue_print(&g_outData);
+	queue_print(&g_outData);
 	n_dtor();
 	
 }

@@ -1,11 +1,13 @@
 #include "netstat.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+#include <time.h>
 
 FILE* g_data;
 
@@ -53,6 +55,7 @@ int convertIP(char* src, struct in6_addr *out)
 // Returns 0 if no data is available
 int n_getData(data_t* data)
 {
+	data->timestamp = time(NULL);
 	if(feof(g_data) > 0) 
 		return 0;
 
@@ -90,6 +93,7 @@ int n_getData(data_t* data)
 
 	// PROGRAM
 	strcpy(data->program, strips[3]);	
+
 	return 1;
 }
 

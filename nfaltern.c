@@ -30,7 +30,9 @@
 
 #include "hashtbl.h"
 #include "queue.h"
+#include "query.h"
 #include "structure.h"
+#include <string.h>
 
 // This function takes NetFlow dump file with name 'path' and creates a new
 // file with process names
@@ -119,9 +121,9 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			
 			// default process
 			char* def= "NO_DATA";
-			shash_item_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
+			data_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
 			if(it)
-				def = it->data.program;
+				def = it->program;
 			
 			/* now, the data in buf cen be transfered somwhere else */
 			
