@@ -48,6 +48,8 @@ int updatePortBinds()
 			if(strcmp(dt->program, data.program) == 0)
 				continue;
 		}
+
+		
 		hash_tab_add(&g_binds, data.addr, data.port, data.protocol, data.program);
 
 		// append into queue and altern timestamp

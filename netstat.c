@@ -82,11 +82,11 @@ int n_getData(data_t* data)
 	convertIP(strips[1],&data->addr); 
 	
 	// DEBUG purpose
-	
+/*	
 	char buff[256];
 	inet_ntop(AF_INET6, &data->addr, buff, 255);
 	printf("Buff: %s\n",buff);
-
+*/
 	// detect PORT
 	data->port = atoi(strips[2]);
 

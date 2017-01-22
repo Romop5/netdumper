@@ -5,7 +5,7 @@ int main()
 	hash_tab_t table;
 	hash_tab_init(&table, 7);
 	struct in6_addr addr = {0,0,0,0}; 
-	inet_pton(AF_INET, "127.0.0.1", &addr);
+	inet_pton(AF_INET, "10.0.0.2", &addr);
 	uint32_t *pdata = (uint32_t*) &addr;
 	pdata[3] = pdata[0];
 	pdata[0] = 0;

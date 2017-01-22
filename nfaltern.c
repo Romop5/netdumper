@@ -33,11 +33,58 @@
 #include "query.h"
 #include "structure.h"
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <dirent.h>
+#include <ctype.h>
+#define _SVID_SOURCE
+int filter(const struct dirent * file)
+{
+	char ptr[256];
+	strncpy(ptr, file->d_name, 256);
+	char* token = NULL;
+	token = strtok(ptr, ".");
+	if(token == NULL)
+		return 0;
+	if(strcmp(token, "nfcapd") == 0)
+	{
+		token = strtok(NULL, ".");
+		while(*token != '\0')
+			if(isdigit(*(token++)) == 0)
+				return 0;
+		//printf("File: %s\n",token);
+		return 1;
+	}
+	return 0;
+}
+/* print files in current directory in reverse order */
+
+// List nfcapd files
+// Returns the count of files
+int listFiles(char* dir, struct dirent ***files)
+{
+	int n;
+   n = scandir(".", files, filter, alphasort);
+	if (n < 0)
+		perror("scandir");
+	return n;
+}
+
+void freeFiles(struct dirent **namelist, int n)
+{
+	while (n--) {
+            free(namelist[n]);
+        }
+        free(namelist);
+}
+
 
 // This function takes NetFlow dump file with name 'path' and creates a new
 // file with process names
 int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 {
+	printf("Alterning file %s\n", path);	
 	lnf_file_t *filep_in;
 	lnf_file_t *filep_out;
 	lnf_rec_t *recp_in;
@@ -53,7 +100,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 		return 0;
 	}
 
-	sprintf(filename_out,"%sout", path);
+	sprintf(filename_out,"out%s", path);
 	int i = 0;
 	int j = 0;
 	int c;
@@ -146,16 +193,40 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	return 0;
 }
 
+int updateFiles(hash_tab_t* processes, queue_t* front)
+{
+	static int counter = 29;
+	if(!(counter++ > 30))
+		return 0;
+	counter = 0;
+
+	// process files
+	
+	printf("Updating files ...\n");
+	struct dirent **names;
+	int n = listFiles(".",&names);
+	for(int i = 0; i < n; i++)
+		alternFile(names[i]->d_name, processes, front);
+	freeFiles(names, n);
+}
+
 int main()
 {
 	queue_t que;
 	hash_tab_t tab;
 	queue_init(&que);
 	hash_tab_init(&tab,100);
-
+	printf("Hello\n");
+/*
 	printf("Hello\n");
 	alternFile("test-file.tmp",&tab,&que);
 
-	
+*/	
 
+	while(1 == 1)
+	{
+		updateFront(&que);
+		updateFiles(&tab,&que);
+		sleep(10);
+	}
 }

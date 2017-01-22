@@ -16,6 +16,9 @@ void processData(data_t* data)
 	{
 		strcpy(array[data->port].program, data->program);
 		printf("'%lu' '%s' '%d' '%s' \n",time(NULL), (data->protocol)?"UDP":"TCP",data->port, data->program);
+		char buff[256];
+		inet_ntop(AF_INET6, &data->addr, buff,256);
+		printf("Adresa: %s\n", buff);
 	}
 }
 
