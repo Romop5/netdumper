@@ -185,6 +185,10 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 
 	}
 
+	char buff[256];
+	sprintf(buff,"old%s",path);
+	if(rename(path, buff) != 0)
+		perror("Rename");
 	lnf_rec_free(recp_in);
 	lnf_rec_free(recp_out);
 	lnf_close(filep_in);
@@ -203,6 +207,7 @@ int updateFiles(hash_tab_t* processes, queue_t* front)
 	// process files
 	
 	printf("Updating files ...\n");
+	printf("Count of items in front: %d ...\n",queue_length(front));
 	struct dirent **names;
 	int n = listFiles(".",&names);
 	for(int i = 0; i < n; i++)
@@ -223,6 +228,7 @@ int main()
 
 */	
 
+	int* mal = malloc(1000);
 	while(1 == 1)
 	{
 		updateFront(&que);
