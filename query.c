@@ -37,19 +37,21 @@ int sockQuery(const char* serverAddr, int port, char* buffer, const int sizeOfBu
 // let SERVERADDR and PORT are globals
 int updateFront(queue_t* front)
 {
-	struct query_msg * buff = malloc(sizeof(16000));
+	struct query_msg * buff = malloc(16000);
 	if(!buff)
 		return -1;
 
 	int res = sockQuery("127.0.0.1", 3009, buff, 16000);
 	if(res >= 0)
 	{
+		int len = buff->count;
 		// for each item in server delivery: queue up the server front
-		for(int i = 0; i < res; i++)
+		for(int i = 0; i < len; i++)
 		{
 			queue_append(front, buff->items[i]);
 		}
 	}
+	free(buff);
 	return 0;
 }
 /*
