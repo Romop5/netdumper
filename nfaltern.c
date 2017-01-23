@@ -160,17 +160,17 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 					fprintf(stderr,"Updating hashtable.\n");
 					// update hashtable
 					hash_tab_add(processes, dt->addr, dt->port,dt->protocol, dt->program);
+					queue_pop(front);
 					continue;
-				} else {
-				}
+				} 
 				break;
 			}
 			
 			// default process
-			char* def= "NO_DATA";
+			char* def= "XXX";
 			data_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
-			if(it)
-				def = it->program;
+		//	if(it)
+		//		def = it->program;
 			
 			/* now, the data in buf cen be transfered somwhere else */
 			
@@ -179,9 +179,14 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 					printf("ERROR\n");
 				if ( lnf_write(filep_out, recp_out) == LNF_OK) {
 					j++;
-				}
-			}
-		}
+					printf("Saving %s process\n",def);
+				} else 
+					perror("lnf_write failed");
+				
+			} else 
+					perror("lnf_set_raw failed");
+		} else 
+			perror("lnf_read");
 
 	}
 
@@ -194,13 +199,14 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	lnf_close(filep_in);
 	lnf_close(filep_out);
 
+	printf("%d read, %d flow stored in %s\n",i,j,path);
 	return 0;
 }
 
 int updateFiles(hash_tab_t* processes, queue_t* front)
 {
 	static int counter = 29;
-	if(!(counter++ > 30))
+	if(!(counter++ > 3))
 		return 0;
 	counter = 0;
 
