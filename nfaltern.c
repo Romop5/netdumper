@@ -131,7 +131,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 		// try to get a raw copy of data
 		if (lnf_rec_get_raw(recp_in, LNF_REC_RAW_TLV, buf, sizeof(buf), &size) == LNF_OK) {
 			
-			int proto;
+			uint8_t proto;
 			// determine the time
 			lnf_rec_fget(recp_in, LNF_FLD_LAST,&flowEndTime);
 			lnf_rec_fget(recp_in, LNF_FLD_SRCADDR,&key.addr);
@@ -145,6 +145,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 				continue;
 			}
 
+			printf("Proto: %d\n",proto);
 			#define UDP_PROTO 17
 
 			key.protocol = P_TCP; 
