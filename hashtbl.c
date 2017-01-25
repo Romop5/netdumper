@@ -116,7 +116,7 @@ void hash_tab_print(hash_tab_t* tab)
 		{	
 			char ip[256];
 			inet_ntop(AF_INET6, &ptr->data.addr, ip, 255);
-			printf("[%d-%s] %s:%d\t%s\n",i,"P",ip, ptr->data.port, ptr->data.program);
+			printf("[%d] %s:%d\t%s - %d\n",i,ip, ptr->data.port, ptr->data.program,ptr->data.protocol);
 			ptr = ptr->next;
 		}
 	}

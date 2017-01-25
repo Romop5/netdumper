@@ -74,9 +74,9 @@ int n_getData(data_t* data)
 	//printf("[%s] %s:%s [%s]\n",strips[0],strips[1],strips[2],strips[3]);
 
 	// detect PROTO
-	data->protocol = P_UDP;
-	if(strcmp("UDP", strips[0]) == 0)
-		data->protocol = P_TCP;
+	data->protocol = P_TCP;
+	if(strcmp("UDP", strips[0]) == 0 || strcmp("udp", strips[0]) == 0)
+		data->protocol = P_UDP;
 
 	// detect SRC
 	convertIP(strips[1],&data->addr); 

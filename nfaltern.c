@@ -145,7 +145,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 				continue;
 			}
 
-			#define UDP_PROTO 0x17
+			#define UDP_PROTO 17
 
 			key.protocol = P_TCP; 
 			if(proto == UDP_PROTO)
@@ -169,8 +169,9 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			// default process
 			char* def= "XXX";
 			data_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
-		//	if(it)
-		//		def = it->program;
+			printf("Searching for port %d and proto %d\n", key.port,key.protocol);
+			if(it)
+				def = it->program;
 			
 			/* now, the data in buf cen be transfered somwhere else */
 			
@@ -200,6 +201,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	lnf_close(filep_out);
 
 	printf("%d read, %d flow stored in %s\n",i,j,path);
+	hash_tab_print(processes);
 	return 0;
 }
 
@@ -234,7 +236,6 @@ int main()
 
 */	
 
-	int* mal = malloc(1000);
 	while(1 == 1)
 	{
 		updateFront(&que);

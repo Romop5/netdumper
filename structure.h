@@ -9,7 +9,7 @@
 typedef struct {
 	// key
 	struct in6_addr addr;
-	int port;
+	uint16_t port;
 	int protocol;
 	//
 	uint64_t timestamp;		// Unix timestamp 

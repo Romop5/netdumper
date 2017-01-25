@@ -47,8 +47,7 @@ int updatePortBinds()
 			// if nothing has changed, scan for another
 			if(strcmp(dt->program, data.program) == 0)
 				continue;
-		}
-
+		} 
 		
 		hash_tab_add(&g_binds, data.addr, data.port, data.protocol, data.program);
 
@@ -61,8 +60,8 @@ int updatePortBinds()
 	}
 	printf("New queue elements count %d\n",i);
 	
-	hash_tab_print(&g_binds);
-	queue_print(&g_outData);
+//	hash_tab_print(&g_binds);
+//	queue_print(&g_outData);
 	n_dtor();
 	
 }
