@@ -89,6 +89,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	lnf_file_t *filep_out;
 	lnf_rec_t *recp_in;
 	lnf_rec_t *recp_out;
+	lnf_brec1_t brec;
 	char buf[LNF_REC_RAW_TLV_BUFSIZE];
 	size_t size;
 
@@ -124,7 +125,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	// update front before each file
 	updateFront(front);
 	// hash tree key
-	data_t key;
+	data_t key,keyB;
 	// for each entry
 	while (lnf_read(filep_in, recp_in) != LNF_EOF) {
 
@@ -135,17 +136,22 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			
 			uint8_t proto;
 			// determine the time
+			//lnf_rec_fget(recp_in, LNF_FLD_BREC1, &brec);
 			lnf_rec_fget(recp_in, LNF_FLD_LAST,&flowEndTime);
 			lnf_rec_fget(recp_in, LNF_FLD_SRCADDR,&key.addr);
+			lnf_rec_fget(recp_in, LNF_FLD_DSTADDR,&keyB.addr);
 			lnf_rec_fget(recp_in, LNF_FLD_SRCPORT,&key.port);
+			lnf_rec_fget(recp_in, LNF_FLD_DSTPORT,&key.port);
 			lnf_rec_fget(recp_in, LNF_FLD_PROT,&proto);
+
 		
-			// skip IPv6 flow
+			/*// skip IPv6 flow
 			if(!IN6_IS_ADDR_V4COMPAT((struct in6_addr *) &key.addr))
 			{
 				perror("Skipping IPv6\n");
 				continue;
 			}
+*/
 
 			#define UDP_PROTO 17
 
@@ -171,6 +177,8 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			// default process
 			char* def= "XXX";
 			data_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
+			if(!it)
+				it = hash_tab_find(processes, keyB.addr, key.port,keyB.protocol);
 			if(it)
 			{
 				printf("Searching for port %d and proto %d\n", key.port,key.protocol);
@@ -213,10 +221,10 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	return 0;
 }
 
-int updateFiles(hash_tab_t* processes, queue_t* front)
+int updateFiles(hash_tab_t* processes, queue_t* front,int delay)
 {
-	static int counter = 29;
-	if(!(counter++ > 3))
+	static int counter = 0;
+	if(!(counter++ >= delay))
 		return 0;
 	counter = 0;
 
@@ -231,23 +239,27 @@ int updateFiles(hash_tab_t* processes, queue_t* front)
 	freeFiles(names, n);
 }
 
-int main()
+
+
+int main(int argc, char ** argv)
 {
+	if(argc < 2)
+	{
+		fprintf(stderr,"Injector");
+		fprintf(stderr,"USAGE: delayTime(x10 seconds)\n");
+		return 1;
+	}
+	int delay = atoi(argv[1]);
 	queue_t que;
 	hash_tab_t tab;
 	queue_init(&que);
 	hash_tab_init(&tab,100);
-	printf("Hello\n");
-/*
-	printf("Hello\n");
-	alternFile("test-file.tmp",&tab,&que);
-
-*/	
+	printf("Starting Injector with delay: %d0 seconds\n",delay);
 
 	while(1 == 1)
 	{
 		updateFront(&que);
-		updateFiles(&tab,&que);
+		updateFiles(&tab,&que,delay);
 		sleep(10);
 	}
 }

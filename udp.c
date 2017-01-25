@@ -26,16 +26,16 @@ int udp_hasConnection(int fd, peer_t* client)
 	int res = recvfrom(fd, &buff, sizeof(buff), 0, (struct sockaddr*) &client->addr, &client->addr_size);
 	if (res == -1)
 		return 0;
-	printf("Bum\n");
+	//printf("Bum\n");
 	return 1;
 }
 
 int udp_sendTo(int fd, const peer_t* client, char *msg, const int len)
 {
-	printf("Len: %d\n",len);
+	//printf("Len: %d\n",len);
 	int r;
 	r = sendto(fd, msg, len, 0, (struct sockaddr *) &client->addr, client->addr_size);	// send the answer
-	printf("r: %d\n",r);
+	//printf("r: %d\n",r);
 	if (r == -1 || r != len)
 	{
 		perror(NULL);
@@ -67,7 +67,7 @@ int udp_hasData(int fd, char *data, int len,peer_t* peer)
 	int res = recvfrom(fd, data, len, 0, (struct sockaddr*) &peer->addr, &peer->addr_size);
 	if (res == -1)
 		return 0;
-	printf("Client: Bum %d\n",res);
+	//printf("Client: Bum %d\n",res);
 	return res;
 
 }
