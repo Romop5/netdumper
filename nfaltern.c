@@ -203,6 +203,8 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 
 	printf("%d read, %d flow stored in %s\n",i,j,path);
 	hash_tab_print(processes);
+
+	free(filename_out);
 	return 0;
 }
 

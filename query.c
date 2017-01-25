@@ -42,7 +42,7 @@ int updateFront(queue_t* front)
 		return -1;
 
 	int res = sockQuery("127.0.0.1", 3009, buff, 16000);
-	if(res >= 0)
+	if(res > 0)
 	{
 		int len = buff->count;
 		// for each item in server delivery: queue up the server front
