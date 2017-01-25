@@ -103,6 +103,8 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	sprintf(filename_out,"out%s", path);
 	int i = 0;
 	int j = 0;
+	int k = 0;
+	int updates = 0;
 	int c;
 	
 	uint64_t flowEndTime;
@@ -145,7 +147,6 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 				continue;
 			}
 
-			printf("Proto: %d\n",proto);
 			#define UDP_PROTO 17
 
 			key.protocol = P_TCP; 
@@ -158,7 +159,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 				data_t* dt = queue_gettop(front);
 				if(dt->timestamp < flowEndTime)
 				{
-					fprintf(stderr,"Updating hashtable.\n");
+					updates++;
 					// update hashtable
 					hash_tab_add(processes, dt->addr, dt->port,dt->protocol, dt->program);
 					queue_pop(front);
@@ -170,9 +171,13 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			// default process
 			char* def= "XXX";
 			data_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
-			printf("Searching for port %d and proto %d\n", key.port,key.protocol);
 			if(it)
+			{
+				printf("Searching for port %d and proto %d\n", key.port,key.protocol);
 				def = it->program;
+				printf("Saving %s process\n",def);
+				k++;
+			}
 			
 			/* now, the data in buf cen be transfered somwhere else */
 			
@@ -181,7 +186,6 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 					printf("ERROR\n");
 				if ( lnf_write(filep_out, recp_out) == LNF_OK) {
 					j++;
-					printf("Saving %s process\n",def);
 				} else 
 					perror("lnf_write failed");
 				
@@ -201,7 +205,8 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	lnf_close(filep_in);
 	lnf_close(filep_out);
 
-	printf("%d read, %d flow stored in %s\n",i,j,path);
+	printf("%d read, %d changed, %d flow stored in %s\n",i,k,j,path);
+	printf("No. of updates: %d\n",updates);
 	hash_tab_print(processes);
 
 	free(filename_out);
