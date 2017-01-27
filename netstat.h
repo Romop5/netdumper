@@ -20,3 +20,5 @@ int n_getData(data_t* data);
 
 // free data used by module
 void n_dtor();
+
+int convertIP(char* src, struct in6_addr *out);

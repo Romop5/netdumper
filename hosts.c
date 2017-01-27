@@ -1,12 +1,9 @@
+#include "hosts.h"
 #include "netstat.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
 #include <time.h>
 
 #include "netstat.h"
@@ -18,6 +15,7 @@ int printIP(struct in6_addr addr)
 	char buff[256];
 	inet_ntop(AF_INET6, &addr, buff, 255);
 	printf("IP: %s\n",buff);
+	return 0;
 }
 
 // Returns 0 on OK
@@ -59,13 +57,13 @@ int getHosts(struct in6_addr* arrayOfAddresses,int slots)
 		pclose(h);
 		return i;
 	}
-
+	return 0;
 }
 
-int main()
+/*int main()
 {
 	struct in6_addr adds[10];
 	int count = getHosts(adds, 10);
 	for(int i = 0; i < count;i++)
 		printIP(adds[i]);
-}
+}*/

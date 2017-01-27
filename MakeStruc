@@ -6,8 +6,8 @@ nfaltern: query.o hashtbl.o queue.o udp.o
 	gcc query.o hashtbl.o queue.o udp.o nfaltern.c -L./. -l:./libnf.a -o nfaltern
 #query: query.o udp.o hashtbl.o queue.o
 #	gcc query.o hashtbl.o queue.o udp.o -o query
-deamon: deamon.o hashtbl.o queue.o udp.o
-	gcc netstat.c deamon.o hashtbl.o queue.o udp.o -o deamon
+deamon: deamon.o hashtbl.o queue.o udp.o hosts.o
+	gcc netstat.c deamon.o hashtbl.o queue.o udp.o hosts.o -o deamon
 test: hashtbl.o queue.o
 	gcc test.c hashtbl.o queue.o -o test 
 
@@ -23,3 +23,4 @@ deamon.o: deamon.c queue.h structure.h hashtbl.h udp.h
 
 udp.o: udp.c udp.h
 query.o: query.c udp.h structure.h
+hosts.o: hosts.c hosts.h
