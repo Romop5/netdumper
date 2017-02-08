@@ -1,10 +1,31 @@
+CC=gcc
+CFLAGS=-g -Wall -g -std=c11
+all: test deamon nfaltern
 
-CFLAGS=-g -Wall -Wextra
+nfaltern: nfaltern.o query.o hashtbl.o queue.o udp.o
+	gcc query.o hashtbl.o queue.o udp.o nfaltern.o -L./. -l:./libnf.a -o nfaltern
+deamon: deamon.o hashtbl.o queue.o udp.o hosts.o
+	gcc netstat.c deamon.o hashtbl.o queue.o udp.o hosts.o -o deamon
+test: hashtbl.o queue.o
+	gcc test.c hashtbl.o queue.o -o test 
 
-main: main.o netstat.o
+clean: 
+	rm deamon nfaltern test *.o
+	
+###############################################################################
+#	OBJECTS
+###############################################################################
 
-main.o: main.c netstat.h
-netstat.o: netstat.c netstat.h
+hashtbl.o: hashtbl.c
+queue.o: queue.c queue.h
+server: server.c
+	gcc -o server server.c
 
-clean:
-	rm *.o main
+deamon.o: deamon.c queue.h structure.h hashtbl.h udp.h
+
+udp.o: udp.c udp.h
+query.o: query.c udp.h structure.h
+hosts.o: hosts.c hosts.h
+
+nfaltern.o: nfaltern.c libnf.h hashtbl.h structure.h queue.h query.h
+	gcc -c nfaltern.c -o nfaltern.o

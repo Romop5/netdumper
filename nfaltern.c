@@ -39,6 +39,8 @@
 #include <dirent.h>
 #include <ctype.h>
 #define _SVID_SOURCE
+
+#include <dirent.h>
 int filter(const struct dirent * file)
 {
 	char ptr[256];
