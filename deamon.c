@@ -109,20 +109,29 @@ void sendDataOut(int fd, peer_t* p)
 
 
 
-int main()
+int main(int argc, char ** argv)
 {
-	
+	fprintf(stdout,"ProcessTracker\n");
+	if(argc < 2)
+	{
+
+		fprintf(stderr,"USAGE: portNum\n");
+		fprintf(stderr,"Note: portNum is an UDP port to listed at.\n");
+		return 1;
+	}	
+	int port = atoi(argv[1]);
+
 	queue_init(&g_outData);
 	hash_tab_init(&g_binds,100);
 	
 	hostsCount = getHosts(&hosts,10);
 
 
-	int fd = udp_start_server(3009);
+	int fd = udp_start_server(port);
 	if(fd == -1)
 		err(1,"Bad things happened");
 	
-	printf("Started server at port 3009.\n");
+	printf("Started server at port %d.\n", port);
 
 	
 	

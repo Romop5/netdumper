@@ -48,7 +48,7 @@ int getHosts(struct in6_addr* arrayOfAddresses,int slots)
 			// skip black listed addresses
 			if(isBlacklisted(line))
 				continue;
-			printf("What we read: '%s'\n",line);
+			printf("Host IP: '%s'\n",line);
 			if(convertIP(line,&addr) != 1)	
 				perror("Convert failed");
 			arrayOfAddresses[i] = addr;
