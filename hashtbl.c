@@ -108,7 +108,7 @@ void  hash_tab_add(hash_tab_t* tab,struct in6_addr addr, int port,int proto, cha
 
 void hash_tab_print(hash_tab_t* tab)
 {
-	printf("Debut table\n");
+	printf("HASH TABLE DEBUG:\n");
 	for(int i = 0; i < tab->pool_size; i++)
 	{
 		shash_item_t* ptr = tab->pool[i];
@@ -116,7 +116,7 @@ void hash_tab_print(hash_tab_t* tab)
 		{	
 			char ip[256];
 			inet_ntop(AF_INET6, &ptr->data.addr, ip, 255);
-			printf("[%d] %s:%d\t%s - %d\n",i,ip, ptr->data.port, ptr->data.program,ptr->data.protocol);
+			printf("[%d] %16s:%d\t%s - %d\n",i,ip, ptr->data.port, ptr->data.program,ptr->data.protocol);
 			ptr = ptr->next;
 		}
 	}

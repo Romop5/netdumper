@@ -131,7 +131,7 @@ int main(int argc, char ** argv)
 
 	int fd = udp_start_server(port);
 	if(fd == -1)
-		err(1,"Bad things happened");
+		err(1,"Bad things happened\n");
 	
 	printf("Started server at port %d.\n", port);
 

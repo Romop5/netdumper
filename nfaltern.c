@@ -245,7 +245,7 @@ int updateFiles(hash_tab_t* processes, queue_t* front,int delay)
 
 int main(int argc, char ** argv)
 {
-	fprintf(stdout,"FlowUpdater");
+	fprintf(stdout,"FlowUpdater\n");
 	if(argc < 3)
 	{
 		fprintf(stderr,"USAGE: IP PORT [delayTime]\n");
