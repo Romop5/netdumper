@@ -62,12 +62,13 @@ void queue_print(queue_t* q)
 {
 	queue_item_t* it = q->first;
 	
+	printf("QUEUE DEBUG:\n");
 	int i = 0; 
 	while(it)
 	{
 		char ip[256];
 		inet_ntop(AF_INET6, &it->data.addr, ip, 256);
-		printf("[%2d] %s:%d\n",++i,ip, it->data.port);
+		printf("[%2d] %16s:%d \n",++i,ip, it->data.port);
 		it = it->next;
 	}
 }

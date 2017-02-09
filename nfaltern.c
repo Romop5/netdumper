@@ -143,7 +143,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			lnf_rec_fget(recp_in, LNF_FLD_SRCADDR,&key.addr);
 			lnf_rec_fget(recp_in, LNF_FLD_DSTADDR,&keyB.addr);
 			lnf_rec_fget(recp_in, LNF_FLD_SRCPORT,&key.port);
-			lnf_rec_fget(recp_in, LNF_FLD_DSTPORT,&key.port);
+			lnf_rec_fget(recp_in, LNF_FLD_DSTPORT,&keyB.port);
 			lnf_rec_fget(recp_in, LNF_FLD_PROT,&proto);
 
 		
@@ -180,7 +180,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			char* def= "XXX";
 			data_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
 			if(!it)
-				it = hash_tab_find(processes, keyB.addr, key.port,keyB.protocol);
+				it = hash_tab_find(processes, keyB.addr, keyB.port,key.protocol);
 			if(it)
 			{
 				printf("Searching for port %d and proto %d\n", key.port,key.protocol);

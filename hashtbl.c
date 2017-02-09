@@ -109,6 +109,7 @@ void  hash_tab_add(hash_tab_t* tab,struct in6_addr addr, int port,int proto, cha
 void hash_tab_print(hash_tab_t* tab)
 {
 	printf("HASH TABLE DEBUG:\n");
+	printf("ID\tADD\t\t\t\tPROGRAM\t\t\tPROTO:\n");
 	for(int i = 0; i < tab->pool_size; i++)
 	{
 		shash_item_t* ptr = tab->pool[i];
@@ -116,7 +117,8 @@ void hash_tab_print(hash_tab_t* tab)
 		{	
 			char ip[256];
 			inet_ntop(AF_INET6, &ptr->data.addr, ip, 255);
-			printf("[%d] %16s:%d\t%s - %d\n",i,ip, ptr->data.port, ptr->data.program,ptr->data.protocol);
+			char* proto = (ptr->data.protocol == P_UDP)?"UDP":"TCP";
+			printf("[%d] %28s:%-5d\t%-20s\t%s\n",i,ip, ptr->data.port, ptr->data.program,proto);
 			ptr = ptr->next;
 		}
 	}
