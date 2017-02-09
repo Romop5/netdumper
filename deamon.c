@@ -4,6 +4,7 @@
 
 #include "netstat.h"
 #include "hosts.h"
+#include <strings.h>
 
 // stores triples (ip, port, program)
 hash_tab_t g_binds;
@@ -61,7 +62,7 @@ int updatePortBinds()
 		if(updateProgram(&data) == 1)
 		{	
 			i++;
-			if(bcmp(data.addr, empty, sizeof(struct in6_addr)) == 0)
+			if(bcmp(&data.addr, &empty, sizeof(struct in6_addr)) == 0)
 			{
 				for(int i = 0; i < hostsCount; i++)
 				{
@@ -79,6 +80,7 @@ int updatePortBinds()
 //	queue_print(&g_outData);
 	n_dtor();
 	
+	return 0;
 }
 
 void sendDataOut(int fd, peer_t* p)
@@ -100,7 +102,7 @@ void sendDataOut(int fd, peer_t* p)
 			queue_pop(&g_outData);
 		}
 		// send it out
-		udp_sendTo(fd, p, msg, output_len);
+		udp_sendTo(fd, p, (char*) msg, output_len);
 
 		free(msg);
 	}
@@ -124,7 +126,7 @@ int main(int argc, char ** argv)
 	queue_init(&g_outData);
 	hash_tab_init(&g_binds,100);
 	
-	hostsCount = getHosts(&hosts,10);
+	hostsCount = getHosts(hosts,10);
 
 
 	int fd = udp_start_server(port);

@@ -24,7 +24,7 @@ typedef struct sockaddr * s_peer;
 typedef struct peer
 {
 	struct sockaddr_in addr;
-	int addr_size;
+	socklen_t addr_size;
 } peer_t;
 
 // Start a non-blocking server

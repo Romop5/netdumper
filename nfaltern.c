@@ -38,7 +38,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <ctype.h>
-#define _SVID_SOURCE
+//#define _SVID_SOURCE
 
 #include <dirent.h>
 int filter(const struct dirent * file)
@@ -125,7 +125,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	lnf_rec_init(&recp_out);
 
 	// update front before each file
-	updateFront(front);
+	//updateFront(front);
 	// hash tree key
 	data_t key,keyB;
 	// for each entry
@@ -245,22 +245,32 @@ int updateFiles(hash_tab_t* processes, queue_t* front,int delay)
 
 int main(int argc, char ** argv)
 {
-	if(argc < 2)
+	fprintf(stdout,"FlowUpdater");
+	if(argc < 3)
 	{
-		fprintf(stderr,"Injector");
-		fprintf(stderr,"USAGE: delayTime(x10 seconds)\n");
+		fprintf(stderr,"USAGE: IP PORT [delayTime]\n");
 		return 1;
 	}
-	int delay = atoi(argv[1]);
+
+	char* serverIP = argv[1];
+	int serverPort = atoi(argv[2]);
+
+	int delay = 0;
+	if(argc >= 3)
+		delay = atoi(argv[3]);
+	
+
 	queue_t que;
 	hash_tab_t tab;
+
 	queue_init(&que);
 	hash_tab_init(&tab,100);
-	printf("Starting Injector with delay: %d0 seconds\n",delay);
+	printf("Starting FlowUpdater with delay: %d0 seconds\n",delay);
+	printf("Linking with: %s:%d\n",serverIP, serverPort);
 
 	while(1 == 1)
 	{
-		updateFront(&que);
+		updateFront(&que,serverIP, serverPort);
 		updateFiles(&tab,&que,delay);
 		sleep(10);
 	}

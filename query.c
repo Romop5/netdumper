@@ -1,8 +1,7 @@
+#include <unistd.h>
 #include "udp.h"
 #include "structure.h"
 #include "queue.h"
-
-#include <unistd.h>
 
 
 
@@ -18,7 +17,7 @@ int sockQuery(const char* serverAddr, int port, char* buffer, const int sizeOfBu
 
 	// send a request to server
 	char * reqv = "REQ";
-	udp_sendTo(fd, &server,recv,strlen(reqv)+1); 
+	udp_sendTo(fd, &server,reqv,strlen(reqv)+1); 
 	
 	// wait for a response
 	int len = 0;
@@ -35,13 +34,13 @@ int sockQuery(const char* serverAddr, int port, char* buffer, const int sizeOfBu
 }
 
 // let SERVERADDR and PORT are globals
-int updateFront(queue_t* front)
+int updateFront(queue_t* front,const char* IP, int port)
 {
 	struct query_msg * buff = malloc(16000);
 	if(!buff)
 		return -1;
 
-	int res = sockQuery("127.0.0.1", 3009, buff, 16000);
+	int res = sockQuery("127.0.0.1", 3009, (char*)buff, 16000);
 	if(res > 0)
 	{
 		int len = buff->count;

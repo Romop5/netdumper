@@ -1,6 +1,6 @@
+#include <stdio.h>
 #include "hosts.h"
 #include "netstat.h"
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -39,7 +39,7 @@ int getHosts(struct in6_addr* arrayOfAddresses,int slots)
 		{
 			struct in6_addr addr;
 			char line[256];
-			if(EOF == fgets(line,256,h))
+			if(NULL == fgets(line,256,h))
 				break;
 			// line end removal
 			char *pos = strchr(line,'\n');

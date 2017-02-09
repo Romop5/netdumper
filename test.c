@@ -1,3 +1,5 @@
+#include <arpa/inet.h>
+#include <stdio.h>
 #include "hashtbl.h"
 #include "queue.h"
 int main()
