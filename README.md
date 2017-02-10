@@ -4,9 +4,9 @@ This project is a part of Projektova Prax subject, currently being taken at [Brn
 
 The aim of the project is to create profiles of computer networks with emphasis on communicating processes, running on certain hosts. The goal is reached by introducing a new system, based on [Cisco NetFlow](https://en.wikipedia.org/wiki/NetFlow), which collects data about processes separetely and use them to extend NetFlow dumps.
 ## 3rd party software
-* NProbe by Ntop
-* nfdump (nf-tools)
-* libnf (FIT VUTBR)
+* [NProbe by Ntop](http://www.ntop.org/products/netflow/nprobe/)
+* [nfdump (nf-tools)](http://nfdump.sourceforge.net/)
+* [libnf (FIT VUTBR)](https://github.com/VUTBR/libnf)
 
 ## Understanding the project
 The project is divided into two parts: ProcessTracker and FlowUpdater. 
@@ -45,8 +45,15 @@ Deamon expects port number to be set in arguments.
 > `./deamon PORTNUM`
 
 **Note**: to have an access to all processess, deamon must be run with *root* rights. 
+
 ### Running nfaltern
 To update files, place nfaltern into directory where *nfdump* dumps its data.
-> `./nfaltern PORTNUM`
+> `./nfaltern IP PORTNUM TIME`
+
+where *IP* and *PORTNUM* stand for IPv4 address and port of deamon and *TIME* is the delta time between two flow updates, multiplied with 10, in seconds.
+
+## Using extended flows 
+An example of extended flows can be found in directory `profiles`. For seeing *process* collumn in flows, it's neccessary to employ *nfdump* with special parameters or extended *nfdumpp* which can be found in this directory.
+
 ## What's the licence
 See _LICENCE_.
