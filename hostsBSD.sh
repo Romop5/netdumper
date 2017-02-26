@@ -5,4 +5,4 @@
 #	127.0.0.1
 #	::1
 
-ip addr| grep inet| awk '{print $2}' | cut -d '/' -f 1
+ifconfig -a| grep inet[^6]| awk '{print $2}' | cut -d '/' -f 1

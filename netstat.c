@@ -11,6 +11,12 @@
 
 FILE* g_data;
 
+#ifdef __linux__
+#define SCRIPTNAME "./binds.sh"
+#else
+#define SCRIPTNAME "./bindsBSD.sh"
+#endif
+
 /* Initialize init module*/
 void n_init()
 {
@@ -19,7 +25,7 @@ void n_init()
 /* load data*/
 int n_load()
 {
-	g_data = popen("./binds.sh","r");
+	g_data = popen(SCRIPTNAME,"r");
 	return (g_data != 0);
 }
 

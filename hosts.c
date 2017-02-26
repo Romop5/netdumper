@@ -8,6 +8,12 @@
 
 #include "netstat.h"
 
+#ifdef __linux__
+#define HOSTSCRIPT "./hosts.sh"
+#else
+#define HOSTSCRIPT "./hostsBSD.sh"
+#endif
+
 int printIP(struct in6_addr addr)
 {
 /* DEBUG purpose*/
@@ -31,7 +37,7 @@ int isBlacklisted(char* addr)
 
 int getHosts(struct in6_addr* arrayOfAddresses,int slots)
 {
-	FILE* h = popen("./hosts.sh","r");
+	FILE* h = popen(HOSTSCRIPT,"r");
 	if(h)
 	{	
 		int i = 0;
