@@ -35,6 +35,11 @@ Data structures used to store data are described in `structure.h`
 
 
 ## Using this project
+**Note**: libnf.a included in main directory was compiled under Linux. 
+In order to compile under FreeBSD, compile `libnf` first and copy .a from
+`/src/.libs/libnf.a` to compilation directory.
+
+
 Project has been tested at Ubuntu 16.10 with standard *gcc*.
 > `make`
 
