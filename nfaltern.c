@@ -36,7 +36,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>
 #include <ctype.h>
 /*#define _SVID_SOURCE*/
 
@@ -91,7 +90,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	lnf_file_t *filep_out;
 	lnf_rec_t *recp_in;
 	lnf_rec_t *recp_out;
-	lnf_brec1_t brec;
+	/*lnf_brec1_t brec;*/
 	char buf[LNF_REC_RAW_TLV_BUFSIZE];
 	size_t size;
 
@@ -238,6 +237,7 @@ int updateFiles(hash_tab_t* processes, queue_t* front,int delay)
 	for(int i = 0; i < n; i++)
 		alternFile(names[i]->d_name, processes, front);
 	freeFiles(names, n);
+	return 1;
 }
 
 

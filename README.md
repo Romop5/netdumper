@@ -58,7 +58,12 @@ To update files, place nfaltern into directory where *nfdump* dumps its data.
 where *IP* and *PORTNUM* stand for IPv4 address and port of deamon and *TIME* is the delta time between two flow updates, multiplied with 10, in seconds.
 
 ## Using extended flows 
-An example of extended flows can be found in directory `profiles`. For seeing *process* collumn in flows, it's neccessary to employ *nfdump* with special parameters or extended *nfdumpp* which can be found in this directory.
+An example of extended flows can be found in directory `profiles`. For seeing *process* collumn in flows, it's neccessary to run `nfdump` with special command-line argument, specifying output format. *%uname* specifies the process name added into NetFlow flow dumps. 
+
+To see an extended output, use this command
+`nfdump -o "fmt: %line %uname" -r <directory-to-extended-dumps>`
+
+![An example output](https://github.com/Romop5/netdumper/doc/console.png)
 
 ## What's the licence
 See _LICENCE_.
