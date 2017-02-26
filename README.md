@@ -63,7 +63,7 @@ An example of extended flows can be found in directory `profiles`. For seeing *p
 To see an extended output, use this command
 `nfdump -o "fmt: %line %uname" -r <directory-to-extended-dumps>`
 
-![An example output](https://github.com/Romop5/netdumper/doc/console.png)
+![](https://github.com/Romop5/netdumper/blob/master/doc/console.png)
 
 ## What's the licence
-See _LICENCE_.
+See _[LICENCE](LICENCE)_.
