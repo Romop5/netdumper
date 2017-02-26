@@ -1,6 +1,8 @@
-// 2016 
-// Author: Roman Dobias (xdobia11)
-// VUTBr
+/*
+	2016 
+	Author: Roman Dobias (xdobia11)
+	VUTBr
+*/
 
 #include "structure.h"
 

@@ -1,6 +1,8 @@
-// 2016 
-// Author: Roman Dobias (xdobia11)
-// VUTBr
+/* 	
+   	Year:	2016 
+	Author: Roman Dobias (xdobia11)
+ 	VUTBr
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +27,8 @@ int hash_tab_init(hash_tab_t* tab, int size)
 	tab->pool = malloc(sizeof(shash_item_t*)*size);	
 	if(tab->pool)
 	{
-		for(int i = 0; i < size; i++)
+		int i = 0;
+		for(i = 0; i < size; i++)
 		{
 			tab->pool[i] = NULL;
 		}
@@ -37,7 +40,8 @@ int hash_tab_init(hash_tab_t* tab, int size)
 // Delete table
 int hash_tab_dispose(hash_tab_t* tab)
 {
-	for(int i = 0; i < tab->pool_size; i++)
+	int i = 0;
+	for(i = 0; i < tab->pool_size; i++)
 	{
 		shash_item_t* next = tab->pool[i],*current = NULL;
 		while(next)
@@ -110,7 +114,8 @@ void hash_tab_print(hash_tab_t* tab)
 {
 	printf("HASH TABLE DEBUG:\n");
 	printf("ID\tADD\t\t\t\tPROGRAM\t\t\tPROTO:\n");
-	for(int i = 0; i < tab->pool_size; i++)
+	int i = 0;
+	for(i = 0; i < tab->pool_size; i++)
 	{
 		shash_item_t* ptr = tab->pool[i];
 		while(ptr)
@@ -128,7 +133,8 @@ unsigned long hash(data_t* data, int size)
 {
         unsigned long hash = 5381;
 	uint32_t *padd = (uint32_t*) &data->addr;
-	for(int i = 0; i < 4; i++)
+	int i = 0;
+	for(i = 0; i < 4; i++)
 		hash ^= (data->port ^ padd[i]);
         return hash;
 }
