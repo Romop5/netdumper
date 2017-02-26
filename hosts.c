@@ -10,7 +10,7 @@
 
 int printIP(struct in6_addr addr)
 {
-// DEBUG purpose
+/* DEBUG purpose*/
 	
 	char buff[256];
 	inet_ntop(AF_INET6, &addr, buff, 255);
@@ -18,7 +18,7 @@ int printIP(struct in6_addr addr)
 	return 0;
 }
 
-// Returns 0 on OK
+/* Returns 0 on OK*/
 int isBlacklisted(char* addr)
 {
 	if(strcmp(addr,"127.0.0.1") == 0)
@@ -41,11 +41,11 @@ int getHosts(struct in6_addr* arrayOfAddresses,int slots)
 			char line[256];
 			if(NULL == fgets(line,256,h))
 				break;
-			// line end removal
+			/* line end removal*/
 			char *pos = strchr(line,'\n');
 			if(pos)
 				*pos = '\0';
-			// skip black listed addresses
+			/* skip black listed addresses*/
 			if(isBlacklisted(line))
 				continue;
 			printf("Host IP: '%s'\n",line);

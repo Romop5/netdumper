@@ -15,11 +15,11 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with libnf.  If not, see <http://www.gnu.org/licenses/>.
+ along with libnf.  If not, see <http://www.gnu.org/licenses/>.*/
 
-*/
 
-//  This is an alterned code of lnf_ex12 from libnf project
+
+/*  This is an alterned code of lnf_ex12 from libnf project*/
 
 #include "libnf.h"
 #include <arpa/inet.h>
@@ -38,7 +38,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <ctype.h>
-//#define _SVID_SOURCE
+/*#define _SVID_SOURCE*/
 
 #include <dirent.h>
 int filter(const struct dirent * file)
@@ -55,19 +55,19 @@ int filter(const struct dirent * file)
 		while(*token != '\0')
 			if(isdigit(*(token++)) == 0)
 				return 0;
-		//printf("File: %s\n",token);
+		/*printf("File: %s\n",token);*/
 		return 1;
 	}
 	return 0;
 }
 /* print files in current directory in reverse order */
 
-// List nfcapd files
-// Returns the count of files
+/* List nfcapd files*/
+/* Returns the count of files*/
 int listFiles(char* dir, struct dirent ***files)
 {
 	int n;
-   n = scandir(".", files, filter, alphasort);
+   n = scandir(".", files, filter, NULL);
 	if (n < 0)
 		perror("scandir");
 	return n;
@@ -82,8 +82,8 @@ void freeFiles(struct dirent **namelist, int n)
 }
 
 
-// This function takes NetFlow dump file with name 'path' and creates a new
-// file with process names
+/* This function takes NetFlow dump file with name 'path' and creates a new*/
+/* file with process names*/
 int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 {
 	printf("Alterning file %s\n", path);	
@@ -95,7 +95,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	char buf[LNF_REC_RAW_TLV_BUFSIZE];
 	size_t size;
 
-	// append 'out' to alterned file
+	/* append 'out' to alterned file*/
 	char *filename_out = malloc(strlen(path)+1+3);
 	if(filename_out == NULL)
 	{
@@ -108,7 +108,6 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	int j = 0;
 	int k = 0;
 	int updates = 0;
-	int c;
 	
 	uint64_t flowEndTime;
 	if (lnf_open(&filep_in, path, LNF_READ, NULL) != LNF_OK) {
@@ -124,21 +123,21 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	lnf_rec_init(&recp_in);
 	lnf_rec_init(&recp_out);
 
-	// update front before each file
-	//updateFront(front);
-	// hash tree key
+	/* update front before each file*/
+	/*updateFront(front);*/
+	/* hash tree key*/
 	data_t key,keyB;
-	// for each entry
+	/* for each entry*/
 	while (lnf_read(filep_in, recp_in) != LNF_EOF) {
 
 		i++;
 
-		// try to get a raw copy of data
+		/* try to get a raw copy of data*/
 		if (lnf_rec_get_raw(recp_in, LNF_REC_RAW_TLV, buf, sizeof(buf), &size) == LNF_OK) {
 			
 			uint8_t proto;
-			// determine the time
-			//lnf_rec_fget(recp_in, LNF_FLD_BREC1, &brec);
+			/* determine the time*/
+			/*lnf_rec_fget(recp_in, LNF_FLD_BREC1, &brec);*/
 			lnf_rec_fget(recp_in, LNF_FLD_LAST,&flowEndTime);
 			lnf_rec_fget(recp_in, LNF_FLD_SRCADDR,&key.addr);
 			lnf_rec_fget(recp_in, LNF_FLD_DSTADDR,&keyB.addr);
@@ -147,7 +146,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			lnf_rec_fget(recp_in, LNF_FLD_PROT,&proto);
 
 		
-			/*// skip IPv6 flow
+			/* skip IPv6 flow
 			if(!IN6_IS_ADDR_V4COMPAT((struct in6_addr *) &key.addr))
 			{
 				perror("Skipping IPv6\n");
@@ -163,12 +162,12 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 
 			while(queue_length(front) > 0)
 			{
-				// get the top of front
+				/* get the top of front*/
 				data_t* dt = queue_gettop(front);
 				if(dt->timestamp < flowEndTime)
 				{
 					updates++;
-					// update hashtable
+					/* update hashtable*/
 					hash_tab_add(processes, dt->addr, dt->port,dt->protocol, dt->program);
 					queue_pop(front);
 					continue;
@@ -176,7 +175,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 				break;
 			}
 			
-			// default process
+			/* default process*/
 			char* def= "XXX";
 			data_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
 			if(!it)
@@ -230,7 +229,7 @@ int updateFiles(hash_tab_t* processes, queue_t* front,int delay)
 		return 0;
 	counter = 0;
 
-	// process files
+	/* process files*/
 	
 	printf("Updating files ...\n");
 	printf("Count of items in front: %d ...\n",queue_length(front));
@@ -255,8 +254,8 @@ int main(int argc, char ** argv)
 	char* serverIP = argv[1];
 	int serverPort = atoi(argv[2]);
 
-	int delay = 0;
-	if(argc >= 3)
+	int delay = 6;
+	if(argc >= 4)
 		delay = atoi(argv[3]);
 	
 

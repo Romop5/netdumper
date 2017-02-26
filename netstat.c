@@ -11,12 +11,12 @@
 
 FILE* g_data;
 
-// Initialize init module
+/* Initialize init module*/
 void n_init()
 {
 }
 
-// load data
+/* load data*/
 int n_load()
 {
 	g_data = popen("./binds.sh","r");
@@ -37,7 +37,7 @@ int readColumn(char* col)
 	return (c == EOF);
 }
 
-// return 1 on success
+/* return 1 on success*/
 int convertIP(char* src, struct in6_addr *out)
 {
 	bzero(out, sizeof(struct in6_addr));
@@ -51,8 +51,8 @@ int convertIP(char* src, struct in6_addr *out)
 	return inet_pton(AF_INET6, src, out);
 }
 
-// Fill data with a single connection
-// Returns 0 if no data is available
+/* Fill data with a single connection*/
+/* Returns 0 if no data is available*/
 int n_getData(data_t* data)
 {
 	data->timestamp = time(NULL);
@@ -67,36 +67,36 @@ int n_getData(data_t* data)
 	}	
 	if(sum != 0)
 		return 0;
-	// get them all
-	// CVS:
-	// PROTO SRC PORT PROGRAM
-	// DEBUG
-	//printf("[%s] %s:%s [%s]\n",strips[0],strips[1],strips[2],strips[3]);
+	/* get them all*/
+	/* CVS:*/
+	/* PROTO SRC PORT PROGRAM*/
+	/* DEBUG*/
+	/*printf("[%s] %s:%s [%s]\n",strips[0],strips[1],strips[2],strips[3]);*/
 
-	// detect PROTO
+	/* detect PROTO*/
 	data->protocol = P_TCP;
 	if(strcmp("UDP", strips[0]) == 0 || strcmp("udp", strips[0]) == 0)
 		data->protocol = P_UDP;
 
-	// detect SRC
+	/* detect SRC*/
 	convertIP(strips[1],&data->addr); 
 	
-	// DEBUG purpose
+	/* DEBUG purpose*/
 /*	
 	char buff[256];
 	inet_ntop(AF_INET6, &data->addr, buff, 255);
 	printf("Buff: %s\n",buff);
 */
-	// detect PORT
+	/* detect PORT*/
 	data->port = atoi(strips[2]);
 
-	// PROGRAM
+	/* PROGRAM*/
 	strcpy(data->program, strips[3]);	
 
 	return 1;
 }
 
-// free data used by module
+/* free data used by module*/
 void n_dtor()
 {
 	pclose(g_data);

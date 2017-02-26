@@ -8,17 +8,17 @@
 #include <arpa/inet.h>
 #include "structure.h"
 
-// Initialize init module
+/* Initialize init module*/
 void n_init();
 
-// load data
+/* load data*/
 int n_load();
 
-// Fill data with a single connection
-// Returns 0 if no data is available
+/* Fill data with a single connection*/
+/* Returns 0 if no data is available*/
 int n_getData(data_t* data);
 
-// free data used by module
+/* free data used by module*/
 void n_dtor();
 
 int convertIP(char* src, struct in6_addr *out);

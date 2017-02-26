@@ -5,21 +5,21 @@
 
 
 
-// Return -1 of failure
-// On success, receives structure S_queryData
+/* Return -1 of failure*/
+/* On success, receives structure S_queryData*/
 int sockQuery(const char* serverAddr, int port, char* buffer, const int sizeOfBuffer)
 {
-	// start a new UDP client
+	/* start a new UDP client*/
 	peer_t server;
 	int fd = udp_start_client(serverAddr,port,&server);
 	if(fd == -1)
 		return -1;
 
-	// send a request to server
+	/* send a request to server*/
 	char * reqv = "REQ";
 	udp_sendTo(fd, &server,reqv,strlen(reqv)+1); 
 	
-	// wait for a response
+	/* wait for a response*/
 	int len = 0;
 	for(int i = 0; i < 100; i++)
 	{
@@ -33,7 +33,7 @@ int sockQuery(const char* serverAddr, int port, char* buffer, const int sizeOfBu
 	return len;
 }
 
-// let SERVERADDR and PORT are globals
+/* let SERVERADDR and PORT are globals*/
 int updateFront(queue_t* front,const char* IP, int port)
 {
 	struct query_msg * buff = malloc(16000);
@@ -44,7 +44,7 @@ int updateFront(queue_t* front,const char* IP, int port)
 	if(res > 0)
 	{
 		int len = buff->count;
-		// for each item in server delivery: queue up the server front
+		/* for each item in server delivery: queue up the server front*/
 		for(int i = 0; i < len; i++)
 		{
 			queue_append(front, buff->items[i]);

@@ -6,11 +6,11 @@
 
 #include "structure.h"
 
-// data structure servers as a key handler and raw data are compared
-// Returns 1 if both structures are equal
+/* data structure servers as a key handler and raw data are compared*/
+/* Returns 1 if both structures are equal*/
 int compare_data(data_t* a, data_t* b);
 
-// A macro-version of compare_data
+/* A macro-version of compare_data*/
 #define CMP_DATA(a,b) (((a)->addr4 == (b)->addr4 && (a)->port == (b)->port))
 
 typedef struct shash_item{
@@ -24,22 +24,22 @@ typedef struct {
 } hash_tab_t;
 
 
-// Initialize table to default state
+/* Initialize table to default state*/
 int hash_tab_init(hash_tab_t* tab, int size);
 
-// Delete table
+/* Delete table*/
 int hash_tab_dispose(hash_tab_t* tab);
 
-// Find member
+/* Find member*/
 shash_item_t*  util_hash_tab_find(hash_tab_t* tab, data_t* key);
 
-// Find member
+/* Find member*/
 data_t*  hash_tab_find(hash_tab_t* tab,struct in6_addr addr, int port,int protocol);
 
-// Add a new member
+/* Add a new member*/
 void  hash_tab_add(hash_tab_t* tab,struct in6_addr addr, int port,int protocol, char* program);
 
-// Data version of add
+/* Data version of add*/
 void  hash_tab_add_dt(hash_tab_t* tab,data_t* dt);
 
 void hash_tab_print(hash_tab_t* tab);

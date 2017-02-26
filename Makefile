@@ -28,4 +28,3 @@ query.o: query.c udp.h structure.h
 hosts.o: hosts.c hosts.h
 
 nfaltern.o: nfaltern.c libnf.h hashtbl.h structure.h queue.h query.h
-	gcc -c nfaltern.c -o nfaltern.o

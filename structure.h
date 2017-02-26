@@ -7,12 +7,12 @@
 #include <netinet/ip.h>
 
 typedef struct {
-	// key
+	/* key*/
 	struct in6_addr addr;
 	uint16_t port;
 	int protocol;
-	//
-	uint64_t timestamp;		// Unix timestamp 
+	/**/
+	uint64_t timestamp;		/* Unix timestamp */
 	char program[256];
 } data_t;
 

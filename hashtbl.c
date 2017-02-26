@@ -20,7 +20,7 @@ int compare_data(data_t* a, data_t* b)
 }
 
 
-// Initialize table to default state
+/* Initialize table to default state*/
 int hash_tab_init(hash_tab_t* tab, int size)
 {
 	tab->pool_size = size;
@@ -37,7 +37,7 @@ int hash_tab_init(hash_tab_t* tab, int size)
 	return 0;
 }
 
-// Delete table
+/* Delete table*/
 int hash_tab_dispose(hash_tab_t* tab)
 {
 	int i = 0;
@@ -57,7 +57,7 @@ int hash_tab_dispose(hash_tab_t* tab)
 	return 0;
 }
 
-// Find member
+/* Find member*/
 shash_item_t*  util_hash_tab_find(hash_tab_t* tab, data_t* key)
 {
 	unsigned long index = hash( key, sizeof(data_t)) % tab->pool_size;
@@ -73,7 +73,7 @@ shash_item_t*  util_hash_tab_find(hash_tab_t* tab, data_t* key)
 	return NULL;
 }
 
-// Find member
+/* Find member*/
 data_t*  hash_tab_find(hash_tab_t* tab,struct in6_addr addr, int port,int proto)
 {
 	data_t key = {addr, port,proto};
@@ -85,10 +85,10 @@ data_t*  hash_tab_find(hash_tab_t* tab,struct in6_addr addr, int port,int proto)
 	return NULL;
 }
 
-// Add a new member
+/* Add a new member*/
 void  hash_tab_add(hash_tab_t* tab,struct in6_addr addr, int port,int proto, char* program)
 {
-	//hash_tab_print(tab);
+	/*hash_tab_print(tab);*/
 	data_t* data = hash_tab_find(tab,addr,port,proto);	
 	if(data)
 	{
