@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-g -Wall -g -std=c11
+CFLAGS=-g -Wall -g -std=c99
 all: test deamon nfaltern
 
 nfaltern: nfaltern.o query.o hashtbl.o queue.o udp.o

@@ -3,6 +3,10 @@
 
 #define P_UDP 0
 #define P_TCP 1
+/* Following headers are essential for FreeBSD */
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 #include <netinet/ip.h>
 

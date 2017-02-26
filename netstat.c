@@ -61,7 +61,8 @@ int n_getData(data_t* data)
 
 	int sum = 0;
 	char strips[4][256];
-	for(int i = 0; i < 4; i++)
+	int i = 0;
+	for(i = 0; i < 4; i++)
 	{
 		sum += readColumn(strips[i]);
 	}	
