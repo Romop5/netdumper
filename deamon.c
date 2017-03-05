@@ -20,15 +20,22 @@ struct in6_addr hosts[10];
 /* count of machine interfaces*/
 int hostsCount;
 
+/*deamon port number*/
+unsigned short dPort;
+
 /* Return 1 on update*/
 int updateProgram(data_t* data)
 {
+	/* ignore deamon and its instances */
+	if(data->protocol == P_UDP && data->port == dPort)
+		return 0; 
 	data_t* dt = hash_tab_find(&g_binds, data->addr, data->port, data->protocol);
 	if(dt)
 	{
 		/* if nothing has changed, scan for another*/
 		if(strcmp(dt->program, data->program) == 0)
 			return 0;
+		printf("'%s' vs '%s'\n",dt->program, data->program);
 	} 
 	
 	hash_tab_add(&g_binds, data->addr, data->port, data->protocol, data->program);
@@ -122,6 +129,7 @@ int main(int argc, char ** argv)
 		return 1;
 	}	
 	int port = atoi(argv[1]);
+	dPort = port;
 
 	queue_init(&g_outData);
 	hash_tab_init(&g_binds,100);

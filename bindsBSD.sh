@@ -6,8 +6,10 @@
 sockstat 2>/dev/null | tail -n+3 | \
 # 2. print out data in CSV format: proto, sourceip:port, program
 awk '{
-	if ($5 == "stream" || $5 == "dgram") 
+	if ($5 != "tcp4" && $5 != "udp4") 
 		next;
+	if($5 == "tcp4") $5 = "tcp";
+	if($5 == "udp4") $5 = "udp";
 	prog = $2;
 	split($6, chars, "");
 
