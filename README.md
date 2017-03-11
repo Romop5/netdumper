@@ -5,6 +5,7 @@ This project is a part of Projektova Prax subject, currently being taken at [Brn
 The aim of the project is to create profiles of computer networks with emphasis on communicating processes, running on certain hosts. The goal is reached by introducing a new system, based on [Cisco NetFlow](https://en.wikipedia.org/wiki/NetFlow), which collects data about processes separetely and use them to extend NetFlow dumps.
 ## 3rd party software
 * [NProbe by Ntop](http://www.ntop.org/products/netflow/nprobe/)
+* [softlowd](https://code.google.com/archive/p/softflowd/downloads)
 * [nfdump (nf-tools)](http://nfdump.sourceforge.net/)
 * [libnf (FIT VUTBR)](https://github.com/VUTBR/libnf)
 
