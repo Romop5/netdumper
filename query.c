@@ -40,7 +40,7 @@ int updateFront(queue_t* front,const char* IP, int port)
 	if(!buff)
 		return -1;
 
-	int res = sockQuery("127.0.0.1", 3009, (char*)buff, 16000);
+	int res = sockQuery(IP, port, (char*)buff, 16000);
 	if(res > 0)
 	{
 		int len = buff->count;
