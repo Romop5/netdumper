@@ -92,6 +92,9 @@ int updatePortBinds()
 
 void sendDataOut(int fd, peer_t* p)
 {
+	static uint32_t seqNum = 0;
+	seqNum++;
+
 	printf("Sending out data...\n");
 	int count = queue_length(&g_outData);		
 	/* message size limitation*/
@@ -103,6 +106,9 @@ void sendDataOut(int fd, peer_t* p)
 	if(msg)
 	{
 		msg->count = count;	
+		msg->sequence = seqNum;
+		//msg->timestamp = (uint64_t) time(NULL);
+		
 		for(int i = 0; i < count; i++)
 		{
 			memcpy(&msg->items[i], queue_gettop(&g_outData),sizeof(data_t));

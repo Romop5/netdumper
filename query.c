@@ -43,6 +43,7 @@ int updateFront(queue_t* front,const char* IP, int port)
 	int res = sockQuery(IP, port, (char*)buff, 16000);
 	if(res > 0)
 	{
+		LOG("[%s]Update [%u] from PT with %d items\n","",buff->sequence,buff->count);
 		int len = buff->count;
 		/* for each item in server delivery: queue up the server front*/
 		for(int i = 0; i < len; i++)

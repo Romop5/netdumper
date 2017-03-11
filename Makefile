@@ -2,8 +2,8 @@ CC=gcc
 CFLAGS=-g -Wall -g -std=c99
 all: test deamon nfaltern
 
-nfaltern: nfaltern.o query.o hashtbl.o queue.o udp.o
-	gcc query.o hashtbl.o queue.o udp.o nfaltern.o -L./. -l:./libnf.a -o nfaltern
+nfaltern: nfaltern.o log.o query.o hashtbl.o queue.o udp.o
+	gcc log.o query.o hashtbl.o queue.o udp.o nfaltern.o -L./. -l:./libnf.a -o nfaltern
 deamon: deamon.o hashtbl.o queue.o udp.o hosts.o
 	gcc netstat.c deamon.o hashtbl.o queue.o udp.o hosts.o -o deamon
 test: hashtbl.o queue.o
@@ -16,6 +16,7 @@ clean:
 #	OBJECTS
 ###############################################################################
 
+log.o: log.c log.h
 hashtbl.o: hashtbl.c
 queue.o: queue.c queue.h
 server: server.c

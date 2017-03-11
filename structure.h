@@ -14,7 +14,7 @@ typedef struct {
 	/* key*/
 	struct in6_addr addr;
 	uint16_t port;
-	int protocol;
+	uint16_t protocol;
 	/**/
 	uint64_t timestamp;		/* Unix timestamp */
 	char program[256];
@@ -22,7 +22,8 @@ typedef struct {
 
 struct query_msg 
 {
-	int count;
+	uint16_t count;
+	uint64_t sequence;
 	data_t items[];
 };
 
