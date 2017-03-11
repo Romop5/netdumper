@@ -6,11 +6,12 @@
 sockstat 2>/dev/null | tail -n+3 | \
 # 2. print out data in CSV format: proto, sourceip:port, program
 awk '{
-	if ($5 != "tcp4" && $5 != "udp4") 
+	if (match($5,"(tcp|udp)[46]") == 0)
 		next;
-	if($5 == "tcp4") $5 = "tcp";
-	if($5 == "udp4") $5 = "udp";
+	sub("[46]","", $5);
 	prog = $2;
+	if(prog == "?")
+		next;
 	split($6, chars, "");
 
 	for(i = length($6); i > 0; i--)
@@ -22,5 +23,6 @@ awk '{
 		}
 		if(SERVER == "*")
 			SERVER = "0.0.0.0";
-	printf "%s,%s,%s,%s\n", $5,SERVER,PORT,prog}'
+	printf "%s,%s,%s,%s\n", $5,SERVER,PORT,prog}'\
+| sort | uniq 
 # 3. alles
