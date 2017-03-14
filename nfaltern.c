@@ -213,6 +213,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	lnf_close(filep_in);
 	lnf_close(filep_out);
 
+	LOG("%d read, %d changed, %d flow stored in %s\n",i,k,j,path);
 	printf("%d read, %d changed, %d flow stored in %s\n",i,k,j,path);
 	printf("No. of updates: %d\n",updates);
 	hash_tab_print(processes);
@@ -264,6 +265,7 @@ int main(int argc, char ** argv)
 
 	queue_init(&que);
 	hash_tab_init(&tab,100);
+	LOG("Starting FlowUpdater with delay: %d0 seconds\n",delay);
 	printf("Starting FlowUpdater with delay: %d0 seconds\n",delay);
 	printf("Linking with: %s:%d\n",serverIP, serverPort);
 
