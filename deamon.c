@@ -1,10 +1,12 @@
 #include "queue.h"
 #include "hashtbl.h"
 #include "udp.h"
+#include "log.h"
 
 #include "netstat.h"
 #include "hosts.h"
 #include <strings.h>
+#include <unistd.h>
 
 /* stores triples (ip, port, program)*/
 hash_tab_t g_binds;
@@ -136,14 +138,13 @@ void sendDataOut(int fd, peer_t* p)
 int main(int argc, char ** argv)
 {
 	fprintf(stdout,"ProcessTracker\n");
-	if(argc < 2)
+	if(argc < 3)
 	{
-
-		fprintf(stderr,"USAGE: portNum\n");
-		fprintf(stderr,"Note: portNum is an UDP port to listed at.\n");
+		fprintf(stderr,"USAGE: <IP> <PORT>\n");
+		fprintf(stderr,"\tIP:PORT  = the adress of process collector\n");
 		return 1;
 	}	
-	int port = atoi(argv[1]);
+	int port = atoi(argv[2]);
 	dPort = port;
 
 	queue_init(&g_outData);
@@ -152,10 +153,13 @@ int main(int argc, char ** argv)
 	hostsCount = getHosts(hosts,10);
 
 	peer_t server;
-	int fd = udp_start_client("127.0.0.1",port,&server);
+	int fd = udp_start_client(argv[1],port,&server);
 	if(fd == -1)
-		err(1,"Bad things happened\n");
-	printf("Sending tracks to: %s\n %d.\n", "127.0.0.1",port);
+	{
+		err(1,"Failed to start UDP client\n");
+		exit(1);
+	}
+	printf("Collector address: %s:%d.\n", argv[1],port);
 	unsigned int tick = 0;
 	while(1 == 1)
 	{

@@ -77,3 +77,8 @@ int udp_close(int fd)
 	close(fd);
 	return 0;
 }
+
+void udp_getPeerIP(peer_t* peer,char* address)
+{
+	inet_ntop(AF_INET, &peer->addr, address,50);
+}

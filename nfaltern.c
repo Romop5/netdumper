@@ -40,6 +40,8 @@
 /*#define _SVID_SOURCE*/
 
 #include <dirent.h>
+#include "log.h"
+#include "udp.h"
 int filter(const struct dirent * file)
 {
 	char ptr[256];
@@ -246,18 +248,17 @@ int updateFiles(hash_tab_t* processes, queue_t* front,int delay)
 int main(int argc, char ** argv)
 {
 	fprintf(stdout,"FlowUpdater\n");
-	if(argc < 3)
+	if(argc < 2)
 	{
-		fprintf(stderr,"USAGE: IP PORT [delayTime]\n");
+		fprintf(stderr,"USAGE: [delayTime]\n");
 		return 1;
 	}
 
-	char* serverIP = argv[1];
-	int serverPort = atoi(argv[2]);
+	int serverPort = atoi(argv[1]);
 
 	int delay = 6;
-	if(argc >= 4)
-		delay = atoi(argv[3]);
+	if(argc >= 3)
+		delay = atoi(argv[2]);
 	
 
 	queue_t que;
@@ -267,7 +268,6 @@ int main(int argc, char ** argv)
 	hash_tab_init(&tab,100);
 	LOG("Starting FlowUpdater with delay: %d0 seconds\n",delay);
 	printf("Starting FlowUpdater with delay: %d0 seconds\n",delay);
-	printf("Linking with: %s:%d\n",serverIP, serverPort);
 
 
 	int fd = udp_start_server(serverPort);

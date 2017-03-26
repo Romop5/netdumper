@@ -2,6 +2,7 @@
 #include "udp.h"
 #include "structure.h"
 #include "queue.h"
+#include "log.h"
 
 
 
@@ -45,12 +46,14 @@ int updateFront(queue_t* front,int fd)
 		if(!buff)
 			return -1;
 
-		int res = udp_hasData(fd,(const void*) buff, 36000, &peer);
+		int res = udp_hasData(fd,(char*) buff, 36000, &peer);
 		LOG("Res: %d\n",res);
 		//int res = sockQuery(IP, port, (char*)buff, 16000);
 		if(res > 0)
 		{
-			LOG("[%s]Update [%u] from PT with %d items\n","",buff->sequence,buff->count);
+			char ip[256];
+			udp_getPeerIP(&peer, ip);
+			LOG("Update [%u] from %s\n with %d items\n",buff->sequence,ip,buff->count);
 			int len = buff->count;
 			/* for each item in server delivery: queue up the server front*/
 			for(int i = 0; i < len; i++)

@@ -39,3 +39,5 @@ int udp_sendTo(int fd, const peer_t* client, char *msg, const int len);
 int udp_start_client(const char *addr, const int port,peer_t* out);
 int udp_hasData(int fd, char *data, int len,peer_t* peer);
 int udp_close(int fd);
+
+void udp_getPeerIP(peer_t*,char*);
