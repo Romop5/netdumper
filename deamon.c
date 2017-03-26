@@ -43,7 +43,16 @@ int updateProgram(data_t* data)
 	/* append into queue and altern timestamp*/
 	/*time_t t = time();*/
 	/*data.timestamp = t;*/
-	queue_append(&g_outData,*data); 
+
+	/*Skip 0.0.0.0 address*/
+	if(bcmp(&data->addr, &empty, sizeof(struct in6_addr)) != 0)
+		queue_append(&g_outData,*data); 
+
+	/*LOG Changes*/
+	char ip[256];
+	inet_ntop(AF_INET6, &data->addr, ip, 255);
+	char* proto = (data->protocol == P_UDP)?"UDP":"TCP";
+	LOG("%28s:%-5d\t%-20s\t%s\n",ip, data->port, data->program,proto);
 	return 1;
 	
 
@@ -81,9 +90,9 @@ int updatePortBinds()
 		}
 		
 	}
-	printf("New queue elements count %d\n",i);
+	LOG("New queue elements appended: %d\n",i);
 	
-	hash_tab_print(&g_binds);
+	/*hash_tab_print(&g_binds);i*/
 /*	queue_print(&g_outData);*/
 	n_dtor();
 	
@@ -95,7 +104,7 @@ void sendDataOut(int fd, peer_t* p)
 	static uint32_t seqNum = 0;
 	seqNum++;
 
-	printf("Sending out data...\n");
+//	printf("Sending out data...\n");
 	int count = queue_length(&g_outData);		
 	/* message size limitation*/
 	if(count > 20)
@@ -142,26 +151,25 @@ int main(int argc, char ** argv)
 	
 	hostsCount = getHosts(hosts,10);
 
-
-	int fd = udp_start_server(port);
+	peer_t server;
+	int fd = udp_start_client("127.0.0.1",port,&server);
 	if(fd == -1)
 		err(1,"Bad things happened\n");
-	
-	printf("Started server at port %d.\n", port);
-
-	
-	
-	peer_t	peer;
-	peer.addr_size = sizeof(struct sockaddr_in);
+	printf("Sending tracks to: %s\n %d.\n", "127.0.0.1",port);
+	unsigned int tick = 0;
 	while(1 == 1)
 	{
-		if(udp_hasConnection(fd, &peer) > 0)
+		++tick;
+		if(tick > 300)
 		{
 			/* send out data*/
-			sendDataOut(fd,&peer);
+			LOG("Sending update ...\n");	
+			sendDataOut(fd,&server);
+			tick = 0;
 		}
 		/* update*/
 		updatePortBinds();
+		/* sleep 30 ms */
 		usleep(30000);
 	}
 	udp_close(fd);

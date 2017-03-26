@@ -23,7 +23,7 @@ int udp_start_server(const int port)
 int udp_hasConnection(int fd, peer_t* client)
 {
 	int buff;
-	int res = recvfrom(fd, &buff, sizeof(buff), 0, (struct sockaddr*) &client->addr, &client->addr_size);
+	int res = recvfrom(fd, &buff, sizeof(buff), MSG_PEEK, (struct sockaddr*) &client->addr, &client->addr_size);
 	if (res == -1)
 		return 0;
 	/*printf("Bum\n");*/

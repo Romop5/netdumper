@@ -4,8 +4,8 @@ all: test deamon nfaltern
 
 nfaltern: nfaltern.o log.o query.o hashtbl.o queue.o udp.o
 	gcc log.o query.o hashtbl.o queue.o udp.o nfaltern.o -L./. -l:./libnf.a -o nfaltern
-deamon: deamon.o hashtbl.o queue.o udp.o hosts.o
-	gcc netstat.c deamon.o hashtbl.o queue.o udp.o hosts.o -o deamon
+deamon: deamon.o log.o hashtbl.o queue.o udp.o hosts.o
+	gcc log.o netstat.c deamon.o hashtbl.o queue.o udp.o hosts.o -o deamon
 test: hashtbl.o queue.o
 	gcc test.c hashtbl.o queue.o -o test 
 

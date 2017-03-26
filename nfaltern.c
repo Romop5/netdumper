@@ -269,10 +269,26 @@ int main(int argc, char ** argv)
 	printf("Starting FlowUpdater with delay: %d0 seconds\n",delay);
 	printf("Linking with: %s:%d\n",serverIP, serverPort);
 
+
+	int fd = udp_start_server(serverPort);
+	if(fd == -1)
+	{
+		err(1,"Bad things happened\n");
+		exit(1);	
+	}
+	
+	printf("Started server at port %d.\n", serverPort);
+
+	unsigned int ticks = 0;
 	while(1 == 1)
 	{
-		updateFront(&que,serverIP, serverPort);
-		updateFiles(&tab,&que,delay);
-		sleep(10);
+		++ticks;
+		updateFront(&que,fd);
+		if(ticks > 10)
+		{
+			updateFiles(&tab,&que,delay);
+			ticks = 0;
+		}
+		sleep(1);
 	}
 }

@@ -34,24 +34,32 @@ int sockQuery(const char* serverAddr, int port, char* buffer, const int sizeOfBu
 }
 
 /* let SERVERADDR and PORT are globals*/
-int updateFront(queue_t* front,const char* IP, int port)
+int updateFront(queue_t* front,int fd)
 {
-	struct query_msg * buff = malloc(16000);
-	if(!buff)
-		return -1;
-
-	int res = sockQuery(IP, port, (char*)buff, 16000);
-	if(res > 0)
+	peer_t	peer;
+	peer.addr_size = sizeof(struct sockaddr_in);
+	if(udp_hasConnection(fd, &peer) > 0)
 	{
-		LOG("[%s]Update [%u] from PT with %d items\n","",buff->sequence,buff->count);
-		int len = buff->count;
-		/* for each item in server delivery: queue up the server front*/
-		for(int i = 0; i < len; i++)
+		LOG("Connection around.\n");
+		struct query_msg * buff = malloc(36000);
+		if(!buff)
+			return -1;
+
+		int res = udp_hasData(fd,(const void*) buff, 36000, &peer);
+		LOG("Res: %d\n",res);
+		//int res = sockQuery(IP, port, (char*)buff, 16000);
+		if(res > 0)
 		{
-			queue_append(front, buff->items[i]);
+			LOG("[%s]Update [%u] from PT with %d items\n","",buff->sequence,buff->count);
+			int len = buff->count;
+			/* for each item in server delivery: queue up the server front*/
+			for(int i = 0; i < len; i++)
+			{
+				queue_append(front, buff->items[i]);
+			}
 		}
+		free(buff);
 	}
-	free(buff);
 	return 0;
 }
 /*
