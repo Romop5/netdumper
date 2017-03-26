@@ -177,15 +177,15 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			}
 			
 			/* default process*/
-			char* def= "XXX";
+			char* def= "none";
 			data_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
 			if(!it)
 				it = hash_tab_find(processes, keyB.addr, keyB.port,key.protocol);
 			if(it)
 			{
-				printf("Searching for port %d and proto %d\n", key.port,key.protocol);
+				LOG("Searching for port %d and proto %d\n", key.port,key.protocol);
 				def = it->program;
-				printf("Saving %s process\n",def);
+				LOG("Saving %s process\n",def);
 				k++;
 			}
 			
@@ -206,19 +206,23 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 
 	}
 
-	char buff[256];
-	sprintf(buff,"old%s",path);
-	if(rename(path, buff) != 0)
-		perror("Rename");
 	lnf_rec_free(recp_in);
 	lnf_rec_free(recp_out);
 	lnf_close(filep_in);
 	lnf_close(filep_out);
+	char buff[256];
+
+/*	RENAME old file - obsolete
+ * 	sprintf(buff,"old%s",path);
+	if(rename(path, buff) != 0)
+		perror("Rename");
+*/
+	unlink(path);
 
 	LOG("%d read, %d changed, %d flow stored in %s\n",i,k,j,path);
 	printf("%d read, %d changed, %d flow stored in %s\n",i,k,j,path);
 	printf("No. of updates: %d\n",updates);
-	hash_tab_print(processes);
+	/*hash_tab_print(processes);*/
 
 	free(filename_out);
 	return 0;

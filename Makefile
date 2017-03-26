@@ -10,7 +10,7 @@ test: hashtbl.o queue.o
 	gcc test.c hashtbl.o queue.o -o test 
 
 clean: 
-	rm deamon nfaltern test *.o
+	rm -rf deamon nfaltern test *.o
 	
 ###############################################################################
 #	OBJECTS
