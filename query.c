@@ -3,6 +3,7 @@
 #include "structure.h"
 #include "queue.h"
 #include "log.h"
+#include <time.h>
 
 
 
@@ -41,13 +42,11 @@ int updateFront(queue_t* front,int fd)
 	peer.addr_size = sizeof(struct sockaddr_in);
 	if(udp_hasConnection(fd, &peer) > 0)
 	{
-		LOG("Connection around.\n");
 		struct query_msg * buff = malloc(36000);
 		if(!buff)
 			return -1;
 
 		int res = udp_hasData(fd,(char*) buff, 36000, &peer);
-		LOG("Res: %d\n",res);
 		//int res = sockQuery(IP, port, (char*)buff, 16000);
 		if(res > 0)
 		{
@@ -59,6 +58,19 @@ int updateFront(queue_t* front,int fd)
 			for(int i = 0; i < len; i++)
 			{
 				queue_append(front, buff->items[i]);
+				/*LOG Changes*/
+				time_t tstamp = (time_t) buff->items[i].timestamp;
+				char buffer[40];
+				struct tm* tm_info;
+
+				tm_info = localtime(&tstamp);
+
+				strftime(buffer, 39, "%Y-%m-%d %H:%M:%S", tm_info);
+
+				char ip[256];
+				inet_ntop(AF_INET6, &buff->items[i].addr, ip, 255);
+				char* proto = (buff->items[i].protocol == P_UDP)?"UDP":"TCP";
+				LOG("%28s:%-5d\t%-20s\t%s - %s\n",ip, buff->items[i].port, buff->items[i].program,proto,buffer);
 			}
 		}
 		free(buff);
