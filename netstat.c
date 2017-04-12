@@ -83,7 +83,7 @@ int n_getData(data_t* data)
 
 	/* detect PROTO*/
 	data->protocol = P_TCP;
-	if(strcmp("UDP", strips[0]) == 0 || strcmp("udp", strips[0]) || strcmp("udp6",strips[0]) || strcmp("UDP6",strips[0]) == 0)
+	if(strcmp("UDP", strips[0]) == 0 || strcmp("udp", strips[0]) == 0 || strcmp("udp6",strips[0]) == 0 || strcmp("UDP6",strips[0]) == 0)
 		data->protocol = P_UDP;
 
 	/* detect SRC*/
