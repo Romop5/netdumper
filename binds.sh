@@ -3,7 +3,7 @@
 # Note: used at Ubuntu 14.10
 
 # 1. get the list of IP  bindings and skip first 2 lines
-netstat -tuapn --numeric-ports 2>/dev/null | tail -n+3 | \
+netstat -tuapnW --numeric-ports 2>/dev/null | tail -n+3 | \
 # 2. print out data in CSV format: proto, sourceip:port, program
 awk '{
 	prog = $7;

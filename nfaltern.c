@@ -42,6 +42,8 @@
 #include <dirent.h>
 #include "log.h"
 #include "udp.h"
+
+#include "btree.h"
 int filter(const struct dirent * file)
 {
 	char ptr[256];
@@ -187,6 +189,20 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 				def = it->program;
 				LOG("Saving %s process\n",def);
 				k++;
+			} else {
+				struct bnode * serA = getService(key.port);
+				struct bnode * serB = getService(keyB.port);
+				if(serA || serB)
+				{
+					if(serA == NULL)	
+						serA = serB;
+					if(key.protocol == P_UDP)
+						def = serA->udp;	
+					else
+						def = serA->tcp;	
+					LOG("Inserting service %s\n",def);	
+				}
+				k++;
 			}
 			
 			/* now, the data in buf cen be transfered somwhere else */
@@ -254,7 +270,7 @@ int main(int argc, char ** argv)
 	fprintf(stdout,"FlowUpdater\n");
 	if(argc < 2)
 	{
-		fprintf(stderr,"USAGE: [delayTime]\n");
+		fprintf(stderr,"USAGE: UPDATER_PORT [delayTime]\n");
 		return 1;
 	}
 
@@ -264,6 +280,12 @@ int main(int argc, char ** argv)
 	if(argc >= 3)
 		delay = atoi(argv[2]);
 	
+
+	if(load_services() != 0)
+	{
+		printf("Failed to load IANA services. Missing services.txt ?");
+		return 1;
+	}
 
 	queue_t que;
 	hash_tab_t tab;
@@ -277,7 +299,7 @@ int main(int argc, char ** argv)
 	int fd = udp_start_server(serverPort);
 	if(fd == -1)
 	{
-		err(1,"Bad things happened\n");
+		err(1,"Failed to start an UDP server at port %d\n",serverPort);
 		exit(1);	
 	}
 	

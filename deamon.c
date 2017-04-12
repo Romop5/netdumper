@@ -82,6 +82,7 @@ int updatePortBinds()
 			i++;
 			if(bcmp(&data.addr, &empty, sizeof(struct in6_addr)) == 0)
 			{
+				printf("%s\n",data.program);
 				for(int i = 0; i < hostsCount; i++)
 				{
 					data.addr = hosts[i];
@@ -164,7 +165,7 @@ int main(int argc, char ** argv)
 	while(1 == 1)
 	{
 		++tick;
-		if(tick > 300)
+		if(tick > 900)
 		{
 			/* send out data*/
 			LOG("Sending update ...\n");	
@@ -174,7 +175,7 @@ int main(int argc, char ** argv)
 		/* update*/
 		updatePortBinds();
 		/* sleep 30 ms */
-		usleep(30000);
+		usleep(10000);
 	}
 	udp_close(fd);
 }

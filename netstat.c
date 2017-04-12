@@ -46,8 +46,9 @@ int readColumn(char* col)
 /* return 1 on success*/
 int convertIP(char* src, struct in6_addr *out)
 {
+	int family = (strchr(src,":") == NULL)?AF_INET:AF_INET6;
 	bzero(out, sizeof(struct in6_addr));
-	if(inet_pton(AF_INET, src, (struct in_data*) out) == 1)
+	if(inet_pton(family, src, (struct in_data*) out) == 1)
 	{
 		uint32_t *data = (uint32_t*) out;
 		data[3] = data[0];
@@ -78,11 +79,11 @@ int n_getData(data_t* data)
 	/* CVS:*/
 	/* PROTO SRC PORT PROGRAM*/
 	/* DEBUG*/
-	/*printf("[%s] %s:%s [%s]\n",strips[0],strips[1],strips[2],strips[3]);*/
+	//printf("[%s] %s:%s [%s]\n",strips[0],strips[1],strips[2],strips[3]);
 
 	/* detect PROTO*/
 	data->protocol = P_TCP;
-	if(strcmp("UDP", strips[0]) == 0 || strcmp("udp", strips[0]) == 0)
+	if(strcmp("UDP", strips[0]) == 0 || strcmp("udp", strips[0]) || strcmp("udp6",strips[0]) || strcmp("UDP6",strips[0]) == 0)
 		data->protocol = P_UDP;
 
 	/* detect SRC*/
