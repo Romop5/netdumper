@@ -1,7 +1,0 @@
-01 profile
-==========
-
-Activity:	
-	running internet browser (Mozzila)
-	running Ubuntu Software centre
-	downloading Audacity
