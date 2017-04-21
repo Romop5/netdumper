@@ -66,5 +66,7 @@ To see an extended output, use this command
 
 ![](https://github.com/Romop5/netdumper/blob/master/doc/console.png)
 
+## Notes
+In order to get IPv6 flows from softflowd, -v 9 must be specified explicitely.
 ## What's the licence
 See _[LICENCE](LICENCE)_.
