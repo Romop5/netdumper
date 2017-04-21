@@ -1,7 +1,7 @@
 program: 
 	$(MAKE) -C ./src
-	ln --symbolic ../src/nfaltern ./bin	
-	ln --symbolic ../src/deamon ./bin	
+	ln -f --symbolic ../src/nfaltern ./bin	
+	ln -f --symbolic ../src/deamon ./bin	
 
 clean: 
 	$(MAKE) -C ./src clean
