@@ -166,7 +166,8 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			{
 				/* get the top of front*/
 				data_t* dt = queue_gettop(front);
-				if(dt->timestamp < flowEndTime)
+				//if(dt->timestamp < flowEndTime) // compare timestamps - obsolete
+				if(1==1)
 				{
 					updates++;
 					/* update hashtable*/
@@ -202,7 +203,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 						def = serA->tcp;	
 					LOG("Inserting service %s\n",def);	
 				}
-				k++;
+				//k++;
 			}
 			
 			/* now, the data in buf cen be transfered somwhere else */

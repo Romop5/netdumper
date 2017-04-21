@@ -1,0 +1,4 @@
+This directory provides useful textutils:
+= statistics.sh		shows statistics of all services/protocols in log in specified directory
+			USAGE: ./statistics PATH
+
