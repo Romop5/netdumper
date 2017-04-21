@@ -67,8 +67,8 @@ void queue_print(queue_t* q)
 	while(it)
 	{
 		char ip[256];
-		inet_ntop(AF_INET6, &it->data.addr, ip, 256);
-		printf("[%2d] %16s:%d \n",++i,ip, it->data.port);
+		inet_ntop(AF_INET6, &it->data.s_addr, ip, 256);
+		printf("[%2d] %16s:%d \n",++i,ip, it->data.s_port);
 		it = it->next;
 	}
 }

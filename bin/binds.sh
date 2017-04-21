@@ -18,5 +18,16 @@ awk '{
 			PORT = substr($4, i+1);
 			break;
 		}
-	printf "%s,%s,%s,%s\n", $1,SERVER,PORT,prog}'
+	split($5, chars, "");
+	for(i = length($5); i > 0; i--)
+		if(chars[i] == ":")
+		{
+			SERVERB = substr($5, 1, i-1);
+			PORTB = substr($5, i+1);
+			if(PORTB == "*")
+				PORTB = 0;
+			break;
+		}
+
+	printf "%s,%s,%s,%s,%s,%s\n", $1,SERVER,PORT,SERVERB,PORTB,prog}'
 # 3. alles

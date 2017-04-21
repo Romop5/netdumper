@@ -68,9 +68,11 @@ int updateFront(queue_t* front,int fd)
 				strftime(buffer, 39, "%Y-%m-%d %H:%M:%S", tm_info);
 
 				char ip[256];
-				inet_ntop(AF_INET6, &buff->items[i].addr, ip, 255);
+				inet_ntop(AF_INET6, &buff->items[i].s_addr, ip, 255);
+				char ipB[256];
+				inet_ntop(AF_INET6, &buff->items[i].d_addr, ipB, 255);
 				char* proto = (buff->items[i].protocol == P_UDP)?"UDP":"TCP";
-				LOG("%28s:%-5d\t%-20s\t%s - %s\n",ip, buff->items[i].port, buff->items[i].program,proto,buffer);
+				LOG("%28s:%-5d %28s:%-5d\t%-20s\t%s - %s\n",ip, buff->items[i].s_port, ipB,buff->items[i].d_port, buff->items[i].program,proto,buffer);
 			}
 		}
 		free(buff);

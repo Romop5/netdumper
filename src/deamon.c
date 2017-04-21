@@ -28,33 +28,35 @@ unsigned short dPort;
 /* Return 1 on update*/
 int updateProgram(data_t* data)
 {
-	/* ignore deamon and its instances */
-	if(data->protocol == P_UDP && data->port == dPort)
+		/* ignore deamon and its instances */
+	if(data->protocol == P_UDP && data->s_port == dPort)
 		return 0; 
-	data_t* dt = hash_tab_find(&g_binds, data->addr, data->port, data->protocol);
+	data_t* dt = hash_tab_find(&g_binds, data->s_addr, data->s_port,data->d_addr,data->d_port,data->protocol);
 	if(dt)
 	{
+		printf("Nasiel som\n");
 		/* if nothing has changed, scan for another*/
 		if(strcmp(dt->program, data->program) == 0)
 			return 0;
 		printf("'%s' vs '%s'\n",dt->program, data->program);
 	} 
-	
-	hash_tab_add(&g_binds, data->addr, data->port, data->protocol, data->program);
+	hash_tab_add(&g_binds, data->s_addr, data->s_port, data->d_addr, data->d_port, data->protocol, data->program);
 
 	/* append into queue and altern timestamp*/
 	/*time_t t = time();*/
 	/*data.timestamp = t;*/
 
 	/*Skip 0.0.0.0 address*/
-	if(bcmp(&data->addr, &empty, sizeof(struct in6_addr)) != 0)
+	if(bcmp(&data->s_addr, &empty, sizeof(struct in6_addr)) != 0)
 		queue_append(&g_outData,*data); 
 
 	/*LOG Changes*/
 	char ip[256];
-	inet_ntop(AF_INET6, &data->addr, ip, 255);
+	inet_ntop(AF_INET6, &data->s_addr, ip, 255);
+	char ipB[256];
+	inet_ntop(AF_INET6, &data->d_addr, ipB, 255);
 	char* proto = (data->protocol == P_UDP)?"UDP":"TCP";
-	LOG("%28s:%-5d\t%-20s\t%s\n",ip, data->port, data->program,proto);
+	LOG("U %39s:%-5d - %39s:%-5d\t%-20s\t%s\n",ip, data->s_port,ipB,data->d_port, data->program,proto);
 	return 1;
 	
 
@@ -80,12 +82,12 @@ int updatePortBinds()
 		if(updateProgram(&data) == 1)
 		{	
 			i++;
-			if(bcmp(&data.addr, &empty, sizeof(struct in6_addr)) == 0)
+			if(bcmp(&data.s_addr, &empty, sizeof(struct in6_addr)) == 0)
 			{
 				printf("%s\n",data.program);
 				for(int i = 0; i < hostsCount; i++)
 				{
-					data.addr = hosts[i];
+					data.s_addr = hosts[i];
 					if(updateProgram(&data) == 1)
 						i++;
 				}

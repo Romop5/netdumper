@@ -62,14 +62,15 @@ int convertIP(char* src, struct in6_addr *out)
 /* Returns 0 if no data is available*/
 int n_getData(data_t* data)
 {
+	enum columnMap{PROTO, SIP,SPORT,DIP,DPORT, PROGRAM};
 	data->timestamp = time(NULL);
 	if(feof(g_data) > 0) 
 		return 0;
 
 	int sum = 0;
-	char strips[4][256];
+	char strips[6][256];
 	int i = 0;
-	for(i = 0; i < 4; i++)
+	for(i = 0; i < 6; i++)
 	{
 		sum += readColumn(strips[i]);
 	}	
@@ -83,23 +84,28 @@ int n_getData(data_t* data)
 
 	/* detect PROTO*/
 	data->protocol = P_TCP;
-	if(strcmp("UDP", strips[0]) == 0 || strcmp("udp", strips[0]) == 0 || strcmp("udp6",strips[0]) == 0 || strcmp("UDP6",strips[0]) == 0)
+	if(strcmp("UDP", strips[PROTO]) == 0 || strcmp("udp", strips[PROTO]) == 0 || strcmp("udp6",strips[PROTO]) == 0 || strcmp("UDP6",strips[PROTO]) == 0)
 		data->protocol = P_UDP;
 
 	/* detect SRC*/
-	convertIP(strips[1],&data->addr); 
+	convertIP(strips[SIP],&data->s_addr); 
+	convertIP(strips[DIP],&data->d_addr); 
 	
 	/* DEBUG purpose*/
-/*	
-	char buff[256];
-	inet_ntop(AF_INET6, &data->addr, buff, 255);
+	
+	/*char buff[256];
+	inet_ntop(AF_INET6, &data->s_addr, buff, 255);
 	printf("Buff: %s\n",buff);
-*/
+
+	inet_ntop(AF_INET6, &data->d_addr, buff, 255);
+	printf("Buff: %s\n",buff);
+	*/
 	/* detect PORT*/
-	data->port = atoi(strips[2]);
+	data->s_port = atoi(strips[SPORT]);
+	data->d_port = atoi(strips[DPORT]);
 
 	/* PROGRAM*/
-	strcpy(data->program, strips[3]);	
+	strcpy(data->program, strips[PROGRAM]);	
 
 	return 1;
 }

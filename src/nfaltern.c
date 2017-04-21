@@ -129,7 +129,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 	/* update front before each file*/
 	/*updateFront(front);*/
 	/* hash tree key*/
-	data_t key,keyB;
+	data_t key;
 	/* for each entry*/
 	while (lnf_read(filep_in, recp_in) != LNF_EOF) {
 
@@ -140,12 +140,11 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			
 			uint8_t proto;
 			/* determine the time*/
-			/*lnf_rec_fget(recp_in, LNF_FLD_BREC1, &brec);*/
 			lnf_rec_fget(recp_in, LNF_FLD_LAST,&flowEndTime);
-			lnf_rec_fget(recp_in, LNF_FLD_SRCADDR,&key.addr);
-			lnf_rec_fget(recp_in, LNF_FLD_DSTADDR,&keyB.addr);
-			lnf_rec_fget(recp_in, LNF_FLD_SRCPORT,&key.port);
-			lnf_rec_fget(recp_in, LNF_FLD_DSTPORT,&keyB.port);
+			lnf_rec_fget(recp_in, LNF_FLD_SRCADDR,&key.s_addr);
+			lnf_rec_fget(recp_in, LNF_FLD_DSTADDR,&key.d_addr);
+			lnf_rec_fget(recp_in, LNF_FLD_SRCPORT,&key.s_port);
+			lnf_rec_fget(recp_in, LNF_FLD_DSTPORT,&key.d_port);
 			lnf_rec_fget(recp_in, LNF_FLD_PROT,&proto);
 
 		
@@ -171,7 +170,7 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 				{
 					updates++;
 					/* update hashtable*/
-					hash_tab_add(processes, dt->addr, dt->port,dt->protocol, dt->program);
+					hash_tab_add(processes, dt->s_addr, dt->s_port,dt->d_addr, dt->d_port,dt->protocol, dt->program);
 					queue_pop(front);
 					continue;
 				} 
@@ -180,18 +179,19 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			
 			/* default process*/
 			char* def= "none";
-			data_t* it = hash_tab_find(processes, key.addr, key.port,key.protocol);
-			if(!it)
+			data_t* it = hash_tab_find(processes, key.s_addr, key.s_port,key.d_addr,key.d_port,key.protocol);
+			/*if(!it)
 				it = hash_tab_find(processes, keyB.addr, keyB.port,key.protocol);
+			*/
 			if(it)
 			{
-				LOG("Searching for port %d and proto %d\n", key.port,key.protocol);
+				LOG("Searching for port %d and proto %d\n", key.s_port,key.protocol);
 				def = it->program;
 				LOG("Saving %s process\n",def);
 				k++;
 			} else {
-				struct bnode * serA = getService(key.port);
-				struct bnode * serB = getService(keyB.port);
+				struct bnode * serA = getService(key.s_port);
+				struct bnode * serB = getService(key.d_port);
 				if(serA || serB)
 				{
 					if(serA == NULL)	

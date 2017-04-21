@@ -1,11 +1,11 @@
 CC=gcc
-CFLAGS=-g -Wall -g -std=c99
+CFLAGS=-O0 -Wall -g -std=c99
 all: test deamon nfaltern
 
 nfaltern: btree.o nfaltern.o log.o query.o hashtbl.o queue.o udp.o
 	gcc btree.o log.o query.o hashtbl.o queue.o udp.o nfaltern.o -L./. -l:./libnf.a -o nfaltern
-deamon: deamon.o log.o hashtbl.o queue.o udp.o hosts.o
-	gcc log.o netstat.c deamon.o hashtbl.o queue.o udp.o hosts.o -o deamon
+deamon: deamon.o netstat.o log.o hashtbl.o queue.o udp.o hosts.o
+	gcc log.o netstat.o deamon.o hashtbl.o queue.o udp.o hosts.o -o deamon
 test: hashtbl.o queue.o
 	gcc test.c hashtbl.o queue.o -o test 
 
@@ -30,3 +30,4 @@ hosts.o: hosts.c hosts.h
 
 nfaltern.o: nfaltern.c libnf.h hashtbl.h structure.h queue.h query.h
 btree.o: btree.c btree.h
+netstat.o: netstat.c netstat.h structure.h
