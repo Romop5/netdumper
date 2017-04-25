@@ -4,6 +4,11 @@
 # Use together with statisticstext.sh
 
 # $1 is directory with flows
+if [ -d ]
+then
+echo "USAGE: <dir-with-nfdumps>"
+exit 1
+fi
 FILES=`find . $1|egrep "*nfcap*"`
 
 # get a huuuuge output file
