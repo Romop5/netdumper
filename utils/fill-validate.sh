@@ -3,7 +3,7 @@
 # Validation script
 # $1 nfdump log
 # $2 nfcapd log
-echo "==Notfill valid=="
+echo "===FillValid==="
 if [ ! -f "$1" ]
 then
 echo "USAGE: <nfdump-log> <nfcap-log>"
@@ -16,7 +16,7 @@ echo "USAGE: <nfdump-log> <nfcap-log>"
 exit 1 
 fi;
 # search for lines that weren't filled in
-LINES=`cat "$1" | egrep '(\*\*\*|none)' | awk '{printf "%s.*%s \n", $6,$8}'`
+LINES=`cat $1 | egrep -v "(\*\*\*|none)" | awk '{printf "(%s.*%s|%s.*%s) \n", $6,$8,$8,$6}'`
 
 CASE_OK=0
 CASE_NO=0
@@ -24,7 +24,7 @@ CASE_NO=0
 for i in $LINES; do 
 # verify it wasn't mention in nfaltern log
 RESULT=`cat $2 | egrep "$i"`
-if [ -z "$RESULT" ]
+if [ ! -z "$RESULT" ]
 then
 	#echo "OK $i"
 	CASE_OK=`expr $CASE_OK + 1`
