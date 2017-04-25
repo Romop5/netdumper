@@ -2,16 +2,7 @@
 # Author: xdobia11
 # Produces statistics per process/service
 
-# $1 is directory with flows
-FILES=`find . $1|egrep "*nfcap*"`
-
-# get a huuuuge output file
-CONCT=""
-for file in $FILES; do
-TMP=`nfdump -r $file -o "fmt:%uname %line6 /=/\n" | grep "/=/"`
-CONCT="$CONCT $TMP"
-done;
-
+CONCT=`cat "$1"`
 #echo "$CONCT"
 # Detect list of services
 SERVICES=`echo "$CONCT"| awk '{print $1}' | sort |uniq`
