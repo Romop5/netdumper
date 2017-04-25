@@ -181,9 +181,9 @@ int alternFile(const char* path, hash_tab_t* processes, queue_t* front)
 			/* default process*/
 			char* def= "none";
 			data_t* it = hash_tab_find(processes, key.s_addr, key.s_port,key.d_addr,key.d_port,key.protocol);
-			/*if(!it)
-				it = hash_tab_find(processes, keyB.addr, keyB.port,key.protocol);
-			*/
+			if(!it)
+				it = hash_tab_find(processes, key.d_addr, key.d_port,key.s_addr,key.s_port,key.protocol);
+			
 			if(it)
 			{
 				LOG("Searching for port %d and proto %d\n", key.s_port,key.protocol);

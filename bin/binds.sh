@@ -11,6 +11,7 @@ awk '{
 		 prog = $6; 
 	split($4, chars, "");
 
+	prog = substr(prog,index(prog,"/")+1);
 	for(i = length($4); i > 0; i--)
 		if(chars[i] == ":")
 		{

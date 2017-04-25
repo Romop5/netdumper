@@ -34,7 +34,6 @@ int updateProgram(data_t* data)
 	data_t* dt = hash_tab_find(&g_binds, data->s_addr, data->s_port,data->d_addr,data->d_port,data->protocol);
 	if(dt)
 	{
-		printf("Nasiel som\n");
 		/* if nothing has changed, scan for another*/
 		if(strcmp(dt->program, data->program) == 0)
 			return 0;

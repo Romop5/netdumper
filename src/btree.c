@@ -72,8 +72,10 @@ int load_services()
 		int port;
 		while(!feof(f))
 		{
-			btree_add(&bservices,port,tcp, udp);
 			fscanf(f,"%d %s %s\n",&port,tcp,udp);
+			strcat(tcp,"***");
+			strcat(udp,"***");
+			btree_add(&bservices,port,tcp, udp);
 			//printf("%d and %s/%s\n",port, tcp,udp);
 		}
 	} else {
