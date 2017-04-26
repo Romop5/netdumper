@@ -3,7 +3,7 @@
 # Produces statistics per process/service
 
 # $1 is directory with flows
-if [ -d ]
+if [ ! -d $1 ]
 then
 echo "USAGE: <dir-with-nfdumps>"
 exit 1
@@ -19,7 +19,7 @@ TMP=`nfdump -r $file -o "fmt:%uname %line6 /=/\n" | grep "/=/"`
 CONCT="$CONCT $TMP"
 done;
 
-echo "$CONCT"
+#echo "$CONCT"
 # Detect list of services
 SERVICES=`echo "$CONCT"| awk '{print $1}' | sort |uniq`
 

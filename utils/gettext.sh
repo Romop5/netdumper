@@ -4,7 +4,7 @@
 # Use together with statisticstext.sh
 
 # $1 is directory with flows
-if [ -d ]
+if [ ! -d $1 ]
 then
 echo "USAGE: <dir-with-nfdumps>"
 exit 1
