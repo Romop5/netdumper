@@ -23,6 +23,21 @@ awk '{
 		}
 		if(SERVER == "*")
 			SERVER = "0.0.0.0";
-	printf "%s,%s,%s,%s\n", $5,SERVER,PORT,prog}'\
+			if(PORT == "*")
+				PORT = "0";
+	split($7, chars, "");
+
+	for(i = length($7); i > 0; i--)
+		if(chars[i] == ":")
+		{
+			SERVERB = substr($7, 1, i-1);
+			PORTB = substr($7, i+1);
+			break;
+		}
+		if(SERVERB == "*")
+			SERVERB = "0.0.0.0";
+			if(PORTB == "*")
+				PORTB = "0";
+printf "%s,%s,%s,%s,%s,%s\n", $5,SERVER,PORT,SERVERB,PORTB,prog}'\
 | sort | uniq 
 # 3. alles
